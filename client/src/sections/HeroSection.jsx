@@ -9,7 +9,7 @@ import {
   GmailIcon,
   DownloadIcon,
 } from "../components/ui/AnimatedIcons.jsx";
-import { RESUME_FILE } from "../data/site.js";
+import { RESUME_FILE } from "../data/Site.js";
 import { toast } from "sonner";
 
 function useISTTime() {

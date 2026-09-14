@@ -4,7 +4,7 @@ import { Menu, X, Command } from "lucide-react";
 import ThemeToggle from "./ui/ThemeToggle.jsx";
 import Button from "./ui/Button.jsx";
 import { DownloadIcon, LetterRIcon } from "./ui/AnimatedIcons.jsx";
-import { RESUME_FILE } from "../data/site.js";
+import { RESUME_FILE } from "../data/Site.js";
 import { useActiveSection } from "../hooks/useActiveSection.js";
 
 const NAV_LINKS = [

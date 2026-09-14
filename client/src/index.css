@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+html,
+body {
+  @apply bg-canvas text-ink dark:bg-canvas-dark dark:text-ink-dark;
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  @apply bg-accent/20 text-ink dark:text-ink-dark;
+}
+
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+[tabindex]:focus {
+  outline: none;
+}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid theme("colors.accent.DEFAULT");
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.dark a:focus-visible,
+.dark button:focus-visible,
+.dark input:focus-visible,
+.dark textarea:focus-visible,
+.dark [tabindex]:focus-visible {
+  outline-color: theme("colors.accent.dark");
+}
+
+.container-content {
+  @apply px-6 mx-auto max-w-content;
+}
+
+.eyebrow {
+  @apply font-mono text-[11px] uppercase tracking-[0.18em] text-muted dark:text-muted-dark;
+}
+
+/* Custom, restrained scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: theme("colors.line.DEFAULT");
+  border-radius: 8px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: theme("colors.line.dark");
+}
+
+/*
+ * Theme toggle — circular reveal via the View Transitions API.
+ * By default the browser cross-fades ::view-transition-old/new(root);
+ * we disable that so our own clip-path circle animation (driven from
+ * ThemeToggle.jsx) is the only motion, growing outward from the button.
+ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}

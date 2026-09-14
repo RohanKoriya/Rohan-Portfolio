@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Local environment variables (Database URIs, JWT secrets)
+.env
+.env.local
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Optional uploaded assets / temporary storage
+uploads/
+temp/
+
+# Editor / IDE settings
+.vscode/
+.idea/

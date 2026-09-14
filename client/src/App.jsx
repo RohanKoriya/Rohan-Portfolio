@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Toaster } from "sonner";
 
-import BlurText from "./components/ui/BlurText.jsx";
+import BlurText from "./components/ui/Blurtext.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import CommandPalette from "./components/CommandPalette.jsx";

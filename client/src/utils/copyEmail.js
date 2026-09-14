@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { EMAIL } from "../data/site.js";
+import { EMAIL } from "../data/Site.js";
 
 /**
  * Copies EMAIL to the clipboard and shows a confirmation toast. Works as a

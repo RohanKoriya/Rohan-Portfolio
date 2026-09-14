@@ -1,4 +1,6 @@
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+const API_BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : "/api";
 
 export async function submitContactForm(payload) {
   const response = await fetch(`${API_BASE}/contact`, {

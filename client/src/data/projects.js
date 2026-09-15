@@ -7,12 +7,12 @@ export const projects = [
     category: "AI SEO Analytics Platform",
     stack: ["React", "Node.js", "Express", "MongoDB", "Gemini AI", "Browserbase"],
     overview:
-      "Enterprise-grade SEO intelligence suite that analyzes 20+ technical factors on a site, surfaces automated AI-generated fixes, and compiles the results into a real-time audit report.",
+      "SEO analytics platform that analyzes 20+ technical factors, identifies issues, and uses AI to suggest improvements in a detailed audit report.",
     highlights: [
-      "Keyword tracking engine with historical rank deltas",
-      "JWT-protected routes and per-account audit history",
-      "Asynchronous report queue for long-running crawls",
-      "One-click PDF exporter for client-ready reports",
+      "Keyword tracking with historical ranking changes",
+      "JWT-protected routes with per-user audit history",
+      "Asynchronous processing for long-running SEO crawls",
+      "One-click PDF export for audit reports",
     ],
     links: {
       github: "https://github.com/rohankoriya/ranklytics",
@@ -27,11 +27,11 @@ export const projects = [
     category: "Smart Leads & CRM Workspace",
     stack: ["React", "JavaScript", "Node.js", "Express", "MongoDB", "Docker"],
     overview:
-      "A high-throughput CRM built to streamline sales pipelines, with role-based access control and pipeline analytics for small sales teams.",
+      "A CRM workspace for managing leads and sales pipelines, with role-based access control, analytics, and reporting.",
     highlights: [
       "Server-side pagination for large lead datasets",
       "One-click CSV export for reporting",
-      "RBAC authorization middleware across every route",
+      "Role-based access control across protected routes",
       "Containerized with Docker for consistent deploys",
     ],
     links: {
@@ -44,15 +44,15 @@ export const projects = [
     name: "ChatSphere",
     image: "/images/chatsphere-img.png",
     featured: false,
-    category: "Real-Time Messaging Suite",
+    category: "Real-Time Messaging App",
     stack: ["React", "Node.js", "Express", "MongoDB", "Socket.IO", "Cloudinary"],
     overview:
-      "A full-featured chat platform with instant messaging, media sharing, and live presence tracking across conversations.",
+      "A real-time chat application with messaging, media sharing, online presence, and conversation updates.",
     highlights: [
-      "Persistent WebSocket connections via Socket.IO",
-      "HTTP-only cookie session security",
-      "Cloudinary-backed avatar and media uploads",
-      "Real-time read receipts and typing indicators",
+      "Real-time messaging with Socket.IO",
+      "HTTP-only cookies for authentication",
+      "Cloudinary-based avatar and media uploads",
+      "Typing indicators and read receipts",
     ],
     links: {
       github: "https://github.com/rohankoriya/chatsphere",
@@ -64,14 +64,14 @@ export const projects = [
     name: "AI Resume Analyzer",
     image: "/images/resume-analys-img.png",
     featured: false,
-    category: "Automated Candidate Evaluation Engine",
+    category: "AI Resume Analysis",
     stack: ["React", "JavaScript", "Puter.js"],
     overview:
-      "A client-side AI utility that parses a resume for ATS compliance and structural improvements, with feedback in real time.",
+      "A web app that analyzes resumes for ATS-friendly structure and provides AI-powered suggestions for improvement.",
     highlights: [
-      "Zero-backend, fully serverless execution",
-      "Fast feedback loop with no upload wait time",
-      "Interactive score breakdown by category",
+      "Client-side resume analysis with Puter.js",
+      "ATS-focused feedback across multiple categories",
+      "Interactive score breakdown and improvement suggestions",
     ],
     links: {
       github: "https://github.com/rohankoriya/ai-resume-analyzer",

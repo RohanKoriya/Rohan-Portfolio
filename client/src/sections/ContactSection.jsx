@@ -20,8 +20,9 @@ export default function ContactSection() {
               Let's talk about your team.
             </h2>
             <p className="max-w-sm mt-6 text-base leading-relaxed text-muted dark:text-muted-dark">
-              Open to full-time roles. Excited to chat about challenging
-              projects.
+              Available for full-time software engineering roles. Whether you
+              have a position open or just want to discuss full-stack projects,
+              my inbox is open.
             </p>
           </motion.div>
 

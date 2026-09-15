@@ -1,38 +1,62 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
-/**
- * Tracks which of the given section ids currently occupies the vertical
- * "reading band" of the viewport (roughly the middle third), and returns
- * that id. Used to drive the active state in nav links.
- */
 export function useActiveSection(ids) {
   const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {
-    const elements = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    const elements = ids
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
     if (elements.length === 0) return;
+
+    // Track intersection states per element
+    const visibleMap = new Map();
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        entries.forEach((entry) => {
+          visibleMap.set(entry.target.id, entry);
+        });
 
-        if (visible[0]) {
-          setActiveId(visible[0].target.id);
+        // If user is scrolled near top, clear active section immediately
+        if (window.scrollY < 150) {
+          setActiveId(null);
+          return;
+        }
+
+        const visibleEntries = Array.from(visibleMap.values()).filter(
+          (entry) => entry.isIntersecting
+        );
+
+        if (visibleEntries.length > 0) {
+          visibleEntries.sort(
+            (a, b) => b.intersectionRatio - a.intersectionRatio
+          );
+          setActiveId(visibleEntries[0].target.id);
         }
       },
       {
-        // Treat the vertical middle band of the viewport as "current".
-        rootMargin: "-40% 0px -50% 0px",
-        threshold: 0,
+        rootMargin: "-20% 0px -50% 0px", // Better viewport threshold for section midpoints
+        threshold: [0, 0.25, 0.5, 0.75, 1],
       }
     );
 
     elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ids.join(",")]);
+
+    // Handle smooth top clearing when scrolling fast to top
+    const handleScroll = () => {
+      if (window.scrollY < 150) {
+        setActiveId(null);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [JSON.stringify(ids)]); // Stable serialization key
 
   return activeId;
 }

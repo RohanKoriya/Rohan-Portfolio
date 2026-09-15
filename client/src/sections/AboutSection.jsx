@@ -3,32 +3,52 @@ import Badge from "../components/ui/Badge.jsx";
 
 const QUICK_FACTS = [
   { label: "Based in", value: "Mumbai, IN" },
-  { label: "Education", value: "B.Sc. IT · 2023–2026" },
-  { label: "Focus", value: "Full-stack (MERN)" },
-  { label: "Availability", value: "Full-time roles" },
+  { label: "Education", value: "B.Sc. IT (2023–2026)" },
+  { label: "Core Stack", value: "React · Node.js · MongoDB" },
+  { label: "Status", value: "Available for full-time" },
 ];
 
 const PRINCIPLES = [
   {
-    title: "Clean API design",
-    body: "Predictable, versioned endpoints with clear contracts — so the frontend never has to guess.",
+    title: "Clean API Design",
+    body: "Predictable, versioned REST endpoints with explicit validation schemas so frontends consume data effortlessly.",
   },
   {
-    title: "Deliberate state management",
-    body: "Local state stays local. Shared state lives in one place, with a clear owner and update path.",
+    title: "Deliberate State Management",
+    body: "Keep UI state localized where possible. Global state is reserved for shared contexts with deterministic data paths.",
   },
   {
-    title: "UI polish as a habit",
-    body: "Spacing, motion, and copy are treated as part of the engineering task, not an afterthought.",
+    title: "Craft as an Engineering Habit",
+    body: "Micro-interactions, spatial rhythm, and responsive performance are core requirements, not post-launch polish.",
   },
 ];
 
 const COURSEWORK = [
   "Data Structures & Algorithms",
   "Web Engineering",
-  "Database Management Systems",
+  "Database Management",
   "Software Architecture",
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
 export default function AboutSection() {
   return (
@@ -37,74 +57,94 @@ export default function AboutSection() {
       className="py-24 border-t md:py-32 border-line dark:border-line-dark"
     >
       <div className="container-content">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
-          {/* Column 1: narrative */}
+        <div className="grid grid-cols-1 gap-12 lg:gap-16 lg:grid-cols-2">
+          {/* Column 1: Narrative & Spec Sheet */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5 }}
+            variants={containerVariants}
+            className="flex flex-col"
           >
-            <span className="eyebrow">About</span>
-            <h2 className="max-w-md mt-4 text-3xl font-semibold tracking-tight text-slate-900 dark:text-zinc-100 md:text-4xl">
-              B.Sc. IT graduate who loves building real apps.
-            </h2>
-            <p className="max-w-md mt-6 text-base leading-relaxed text-slate-600 dark:text-zinc-400 md:text-lg">
-              I completed my degree in Information Technology at Mumbai
-              University. While my courses gave me a good CS foundation, I
-              learned the most by actually building products — like
-              PredictSense, Ranklytics, and ChatSphere. I enjoy working on
-              full-stack apps, writing clean code, and solving the tricky
-              problems that pop up along the way.
-            </p>
+            <motion.span variants={itemVariants} className="eyebrow">
+              About
+            </motion.span>
 
-            {/* Quick facts — scannable spec-sheet strip */}
-            <dl className="grid max-w-md grid-cols-2 mt-10 border-t border-line dark:border-line-dark">
+            <motion.h2
+              variants={itemVariants}
+              className="max-w-lg mt-3 text-3xl font-medium tracking-tight md:text-4xl text-ink dark:text-ink-dark"
+            >
+              Full-stack developer focused on building scalable, polished web
+              apps.
+            </motion.h2>
+
+            <motion.p
+              variants={itemVariants}
+              className="max-w-lg mt-5 text-base leading-relaxed text-muted dark:text-muted-dark md:text-lg"
+            >
+              I recently completed my IT degree at Mumbai University. While my
+              coursework established strong CS foundations, I developed my
+              engineering skills by shipping end-to-end applications like
+              Ranklytics, Leadflow and ChatSphere. I thrive on solving complex
+              state problems and designing intuitive user interfaces.
+            </motion.p>
+
+            {/* Quick facts spec sheet */}
+            <motion.dl
+              variants={itemVariants}
+              className="grid max-w-lg grid-cols-2 mt-8 border-t border-line dark:border-line-dark"
+            >
               {QUICK_FACTS.map((fact) => (
                 <div
                   key={fact.label}
-                  className="py-4 pr-4 border-b border-line dark:border-line-dark"
+                  className="py-3.5 pr-4 border-b border-line dark:border-line-dark"
                 >
                   <dt className="eyebrow">{fact.label}</dt>
-                  <dd className="mt-1.5 text-sm text-ink dark:text-ink-dark">
+                  <dd className="mt-1 text-sm font-medium text-ink dark:text-ink-dark">
                     {fact.value}
                   </dd>
                 </div>
               ))}
-            </dl>
+            </motion.dl>
 
-            <div className="flex flex-wrap max-w-md gap-2 mt-8">
+            {/* Coursework Tags */}
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-wrap max-w-lg gap-2 mt-6"
+            >
               {COURSEWORK.map((course) => (
                 <Badge key={course}>{course}</Badge>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
 
-          {/* Column 2: principles + currently building */}
+          {/* Column 2: Engineering Principles & Status */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: 0.08 }}
-            className="flex flex-col gap-10"
+            variants={containerVariants}
+            className="flex flex-col justify-between gap-10"
           >
             <div>
-              <span className="eyebrow">Engineering principles</span>
-              <div className="flex flex-col mt-4 border-t border-line dark:border-line-dark">
+              <motion.span variants={itemVariants} className="eyebrow">
+                Engineering Principles
+              </motion.span>
+
+              <div className="flex flex-col mt-3 border-t border-line dark:border-line-dark">
                 {PRINCIPLES.map((principle, index) => (
                   <motion.div
                     key={principle.title}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-60px" }}
-                    transition={{ duration: 0.4, delay: index * 0.08 }}
-                    className="flex gap-5 py-6 transition-colors duration-200 border-b group border-line dark:border-line-dark hover:bg-surface/50 dark:hover:bg-surface-dark/50"
+                    variants={itemVariants}
+                    whileHover={{ x: 6 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="flex gap-4 py-5 transition-colors duration-200 border-b cursor-default sm:gap-5 group border-line dark:border-line-dark"
                   >
-                    <span className="font-mono text-3xl leading-none transition-colors duration-200 text-line dark:text-line-dark group-hover:text-accent/40 dark:group-hover:text-accent-dark/40">
+                    <span className="font-mono text-xl font-light transition-colors duration-200 sm:text-2xl text-muted/40 dark:text-muted-dark/40 group-hover:text-amber-500">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <div>
-                      <h3 className="text-base font-medium mb-1.5 transition-colors duration-200 group-hover:text-accent dark:group-hover:text-accent-dark">
+                      <h3 className="mb-1 text-base font-medium transition-colors duration-200 text-ink dark:text-ink-dark group-hover:text-amber-500">
                         {principle.title}
                       </h3>
                       <p className="text-sm leading-relaxed text-muted dark:text-muted-dark">
@@ -116,17 +156,26 @@ export default function AboutSection() {
               </div>
             </div>
 
-            <div className="p-6 border rounded-2xl border-line dark:border-line-dark bg-surface/70 dark:bg-surface-dark/70">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-dot" />
-                <span className="eyebrow">Currently building</span>
+            {/* Currently Learning Card */}
+            <motion.div
+              variants={itemVariants}
+              className="p-5 border shadow-sm sm:p-6 rounded-2xl border-line/80 dark:border-line-dark/80 bg-surface/50 dark:bg-surface-dark/50 backdrop-blur-sm"
+            >
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="relative flex w-2 h-2">
+                  <span className="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-emerald-400" />
+                  <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+                </span>
+                <span className="eyebrow text-emerald-600 dark:text-emerald-400">
+                  Currently Learning
+                </span>
               </div>
-              <p className="mb-1 text-base font-medium">Ranklytics</p>
+
               <p className="text-sm leading-relaxed text-muted dark:text-muted-dark">
-                Rolling out an async report queue and a keyword-tracking engine
-                ahead of a public beta.
+                Currently exploring new frontend and backend concepts, along
+                with AI and ML.
               </p>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

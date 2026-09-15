@@ -8,7 +8,7 @@ import { RESUME_FILE } from "../data/Site.js";
 import { useActiveSection } from "../hooks/useActiveSection.js";
 
 const NAV_LINKS = [
-  { label: "Work", href: "#work" },
+  { label: "Projects", href: "#work" },
   { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
   { label: "Contact", href: "#contact" },

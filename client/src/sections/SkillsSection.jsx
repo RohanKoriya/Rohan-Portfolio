@@ -84,7 +84,7 @@ export default function SkillsSection() {
               Skills
             </span>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl text-ink dark:text-ink-dark">
-              The tools I reach for, by layer.
+              The tools I use to build.
             </h2>
           </div>
           <span className="font-mono text-xs text-muted dark:text-muted-dark">
@@ -140,7 +140,7 @@ export default function SkillsSection() {
                   className="flex flex-col justify-between gap-4 p-4 transition-all duration-200 border group rounded-2xl border-line dark:border-line-dark bg-surface dark:bg-surface-dark hover:bg-canvas hover:border-accent/40 hover:shadow-md hover:shadow-line dark:hover:bg-surface-dark dark:hover:border-accent/40 dark:hover:shadow-none"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="p-2 transition-colors border bg-canvas rounded-xl dark:bg-surface-dark border-line dark:border-line-dark group-hover:border-accent/30">
+                    <div className="p-2 transition-colors border bg-canvas rounded-xl dark:bg-surface-dark border-line dark:border-line-dark ">
                       <Icon
                         size={18}
                         strokeWidth={1.75}

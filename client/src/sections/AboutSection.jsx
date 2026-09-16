@@ -11,23 +11,16 @@ const QUICK_FACTS = [
 const PRINCIPLES = [
   {
     title: "Clean API Design",
-    body: "Predictable, versioned REST endpoints with explicit validation schemas so frontends consume data effortlessly.",
+    body: "I keep endpoints predictable and validate data at the boundary..",
   },
   {
-    title: "Deliberate State Management",
-    body: "Keep UI state localized where possible. Global state is reserved for shared contexts with deterministic data paths.",
+    title: "State where it belongs",
+    body: "I keep state close to where it's used and introduce shared state only when it solves a real problem.",
   },
   {
-    title: "Craft as an Engineering Habit",
-    body: "Micro-interactions, spatial rhythm, and responsive performance are core requirements, not post-launch polish.",
+    title: "Polish is part of the build",
+    body: "Responsive behavior, small interactions, and visual details are considered while building—not added at the end.",
   },
-];
-
-const COURSEWORK = [
-  "Data Structures & Algorithms",
-  "Web Engineering",
-  "Database Management",
-  "Software Architecture",
 ];
 
 const containerVariants = {
@@ -74,19 +67,19 @@ export default function AboutSection() {
               variants={itemVariants}
               className="max-w-lg mt-3 text-3xl font-medium tracking-tight md:text-4xl text-ink dark:text-ink-dark"
             >
-              Full-stack developer focused on building scalable, polished web
-              apps.
+              I build full-stack web apps that feel simple to use and solid
+              underneath.
             </motion.h2>
 
             <motion.p
               variants={itemVariants}
               className="max-w-lg mt-5 text-base leading-relaxed text-muted dark:text-muted-dark md:text-lg"
             >
-              I recently completed my IT degree at Mumbai University. While my
-              coursework established strong CS foundations, I developed my
-              engineering skills by shipping end-to-end applications like
-              Ranklytics, Leadflow and ChatSphere. I thrive on solving complex
-              state problems and designing intuitive user interfaces.
+              I recently completed my IT degree at Mumbai University. Most of my
+              learning has come from building and shipping end-to-end
+              applications like Ranklytics, LeadFlow, and ChatSphere. I enjoy
+              working across the stack, from interfaces and APIs to the data
+              behind them.
             </motion.p>
 
             {/* Quick facts spec sheet */}
@@ -106,16 +99,6 @@ export default function AboutSection() {
                 </div>
               ))}
             </motion.dl>
-
-            {/* Coursework Tags */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-wrap max-w-lg gap-2 mt-6"
-            >
-              {COURSEWORK.map((course) => (
-                <Badge key={course}>{course}</Badge>
-              ))}
-            </motion.div>
           </motion.div>
 
           {/* Column 2: Engineering Principles & Status */}
@@ -128,7 +111,7 @@ export default function AboutSection() {
           >
             <div>
               <motion.span variants={itemVariants} className="eyebrow">
-                Engineering Principles
+                How i Work
               </motion.span>
 
               <div className="flex flex-col mt-3 border-t border-line dark:border-line-dark">
@@ -136,11 +119,10 @@ export default function AboutSection() {
                   <motion.div
                     key={principle.title}
                     variants={itemVariants}
-                    whileHover={{ x: 6 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     className="flex gap-4 py-5 transition-colors duration-200 border-b cursor-default sm:gap-5 group border-line dark:border-line-dark"
                   >
-                    <span className="font-mono text-xl font-light transition-colors duration-200 sm:text-2xl text-muted/40 dark:text-muted-dark/40 group-hover:text-amber-500">
+                    <span className="font-mono text-xl font-light transition-colors duration-200 sm:text-2xl text-muted/40 dark:text-muted-dark/40 group-hover:text-emerald-400">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <div>
@@ -156,24 +138,22 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* Currently Learning Card */}
+            {/* Currently Learning */}
             <motion.div
               variants={itemVariants}
-              className="p-5 border shadow-sm sm:p-6 rounded-2xl border-line/80 dark:border-line-dark/80 bg-surface/50 dark:bg-surface-dark/50 backdrop-blur-sm"
+              className="pt-5 border-line dark:border-line-dark/60"
             >
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="relative flex w-2 h-2">
-                  <span className="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-emerald-400" />
-                  <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
-                </span>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+
                 <span className="eyebrow text-emerald-600 dark:text-emerald-400">
                   Currently Learning
                 </span>
               </div>
 
               <p className="text-sm leading-relaxed text-muted dark:text-muted-dark">
-                Currently exploring new frontend and backend concepts, along
-                with AI and ML.
+                Exploring new frontend and backend concepts, with a growing
+                focus on AI and ML.
               </p>
             </motion.div>
           </motion.div>

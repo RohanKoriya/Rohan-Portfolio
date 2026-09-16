@@ -10,12 +10,6 @@ const BASE_TOP_PX = 96;
 function StackedCard({ project, index, total, cardRef, nextCardRef }) {
   const isLast = index === total - 1;
 
-  /*
-   * Track the ACTUAL scroll position of the next card.
-   *
-   * 0 = next card is just entering the viewport
-   * 1 = next card has reached its sticky position
-   */
   const { scrollYProgress: nextCardProgress } = useScroll({
     target: nextCardRef,
     offset: [
@@ -25,37 +19,20 @@ function StackedCard({ project, index, total, cardRef, nextCardRef }) {
     layoutEffect: false,
   });
 
-  /*
-   * Previous card remains completely sharp
-   * until the next card has covered approximately 60%.
-   */
   const blur = useTransform(
     nextCardProgress,
     [0, 0.6, 0.75, 1],
-    [0, 0, isLast ? 0 : 0.8, isLast ? 0 : 2],
+    [0, 0, isLast ? 0 : 0.5, isLast ? 0 : 1.5],
   );
 
-  /*
-   * Slightly darken the previous card only after
-   * the next card has reached around 60%.
-   */
-  const brightness = useTransform(
-    nextCardProgress,
-    [0, 0.6, 0.75, 1],
-    [1, 1, isLast ? 1 : 0.9, isLast ? 1 : 0.82],
-  );
-
-  /*
-   * Slight scale-down as the next card takes focus.
-   */
   const scale = useTransform(
     nextCardProgress,
     [0, 0.6, 1],
-    [1, 1, isLast ? 1 : 0.96],
+    [1, 1, isLast ? 1 : 0.97],
   );
 
   const filter = useMotionTemplate`
-    brightness(${brightness})
+    
     blur(${blur}px)
   `;
 
@@ -70,6 +47,7 @@ function StackedCard({ project, index, total, cardRef, nextCardRef }) {
     >
       <ProjectCard
         project={project}
+        index={index}
         style={{
           scale,
           filter,
@@ -108,10 +86,10 @@ export default function ProjectStack() {
         ))}
       </div>
 
-      {/* Mobile: normal cards */}
+      {/* Mobile: normal list */}
       <div className="flex flex-col gap-6 md:hidden">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+        {projects.map((project, index) => (
+          <ProjectCard key={project.id} project={project} index={index} />
         ))}
       </div>
     </>

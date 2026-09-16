@@ -181,7 +181,6 @@ export default function HeroSection() {
                     <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
                   </div>
                   <span className="ml-auto flex items-center gap-1.5 font-mono text-[11px] font-medium tracking-wide text-muted dark:text-muted-dark">
-                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     rohan.config.js
                   </span>
                 </div>
@@ -275,16 +274,6 @@ export default function HeroSection() {
                       </span>
                       <span className="text-muted dark:text-muted-dark">]</span>
                       <span className="text-muted dark:text-muted-dark">,</span>
-                    </div>
-
-                    <div>
-                      <span className="text-emerald-700 dark:text-emerald-400">
-                        building
-                      </span>
-                      <span className="text-ink dark:text-ink-dark">: </span>
-                      <span className="text-amber-700 dark:text-amber-300">
-                        "PredictSense"
-                      </span>
                     </div>
                   </div>
 

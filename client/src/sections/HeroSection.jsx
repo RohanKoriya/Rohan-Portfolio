@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { motion } from "motion/react";
 import Button from "../components/ui/Button.jsx";
 import TiltCard from "../components/ui/TiltCard.jsx";
@@ -11,24 +11,6 @@ import {
 } from "../components/ui/AnimatedIcons.jsx";
 import { RESUME_FILE } from "../data/Site.js";
 import { toast } from "sonner";
-
-function useISTTime() {
-  const [time, setTime] = useState("");
-  useEffect(() => {
-    const format = () =>
-      new Intl.DateTimeFormat("en-IN", {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
-      }).format(new Date());
-    setTime(format());
-    const id = setInterval(() => setTime(format()), 1000);
-    return () => clearInterval(id);
-  }, []);
-  return time;
-}
 
 const SOCIALS = [
   { label: "GitHub", href: "https://github.com/rohankoriya", Icon: GithubIcon },
@@ -52,7 +34,6 @@ const SOCIALS = [
 ];
 
 export default function HeroSection() {
-  const time = useISTTime();
   const iconRefs = useRef({});
   const downloadRef = useRef(null);
 
@@ -63,12 +44,13 @@ export default function HeroSection() {
           <div>
             <motion.div
               initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="mb-6 inline-flex items-center gap-2 rounded-full border border-line dark:border-line-dark px-3 py-1.5"
             >
-              <span className="relative flex w-2 h-2">
-                <span className="absolute inline-flex w-full h-full rounded-full animate-pulse-dot bg-signal" />
+              <span className="relative flex w-1.5 h-1.5">
+                <span className="absolute inline-flex w-full h-full rounded-full bg-signal" />
               </span>
               <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted dark:text-muted-dark">
                 Available for full-time roles
@@ -77,7 +59,8 @@ export default function HeroSection() {
 
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{
                 duration: 0.6,
                 delay: 0.05,
@@ -90,7 +73,8 @@ export default function HeroSection() {
 
             <motion.p
               initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{
                 duration: 0.6,
                 delay: 0.12,
@@ -104,7 +88,8 @@ export default function HeroSection() {
 
             <motion.div
               initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{
                 duration: 0.6,
                 delay: 0.18,
@@ -130,7 +115,8 @@ export default function HeroSection() {
 
             <motion.div
               initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{
                 duration: 0.6,
                 delay: 0.24,
@@ -169,16 +155,17 @@ export default function HeroSection() {
           <TiltCard>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <div className="relative overflow-hidden border shadow-xl rounded-2xl border-line/80 bg-surface/80 shadow-ink/5 backdrop-blur-sm dark:border-line-dark/80 dark:bg-surface-dark/80 dark:shadow-none">
                 {/* IDE Header */}
                 <div className="flex items-center gap-2 px-4 py-3 border-b border-line/60 bg-canvas/60 dark:border-line-dark/60 dark:bg-canvas-dark/40">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                    <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                    <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                    <span className="w-3 h-3 rounded-full bg-gray-600/80" />
+                    <span className="w-3 h-3 rounded-full bg-gray-500/80" />
+                    <span className="w-3 h-3 rounded-full bg-gray-400/80" />
                   </div>
                   <span className="ml-auto flex items-center gap-1.5 font-mono text-[11px] font-medium tracking-wide text-muted dark:text-muted-dark">
                     rohan.config.js
@@ -230,17 +217,6 @@ export default function HeroSection() {
                       <span className="text-ink dark:text-ink-dark">: </span>
                       <span className="text-amber-700 dark:text-amber-300">
                         "Mumbai, IN"
-                      </span>
-                      <span className="text-muted dark:text-muted-dark">,</span>
-                    </div>
-
-                    <div>
-                      <span className="text-emerald-700 dark:text-emerald-400">
-                        status
-                      </span>
-                      <span className="text-ink dark:text-ink-dark">: </span>
-                      <span className="text-amber-700 dark:text-amber-300">
-                        "Available for full-time roles"
                       </span>
                       <span className="text-muted dark:text-muted-dark">,</span>
                     </div>

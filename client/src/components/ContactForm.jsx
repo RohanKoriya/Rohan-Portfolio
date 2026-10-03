@@ -17,10 +17,8 @@ const contactSchema = z.object({
     .trim()
     .min(10, "Message should be at least 10 characters")
     .max(MESSAGE_MAX, `Keep it under ${MESSAGE_MAX} characters`),
-  // Honeypot: real visitors never see this field, so it should always arrive
-  // empty. If a bot fills every field it finds, validation rejects the
-  // submission here, before it ever reaches onSubmit or the network.
-  company: z.string().max(0, "").optional(),
+  // Keep optional string for honeypot field so validation never blocks regular users
+  company: z.string().optional(),
 });
 
 function fieldClasses(hasError) {
@@ -48,6 +46,12 @@ export default function ContactForm() {
   const emailValid = touchedFields.email && !errors.email;
 
   const onSubmit = async ({ company, ...values }) => {
+    // If honeypot is filled, silently ignore without showing error to bot
+    if (company) {
+      reset();
+      return;
+    }
+
     try {
       await submitContactForm(values);
       toast.success("Message sent successfully!");
@@ -63,11 +67,8 @@ export default function ContactForm() {
       noValidate
       className="relative flex flex-col gap-5"
     >
-      {/* Honeypot — hidden from sighted and keyboard users, still visible to simple bots */}
-      <div
-        className="absolute -left-[9999px] top-0 opacity-0"
-        aria-hidden="true"
-      >
+      {/* Honeypot: Hidden with display:none so screen readers, focus cycles, and browser autofill completely ignore it */}
+      <div className="hidden" aria-hidden="true">
         <label htmlFor="company">Company</label>
         <input
           id="company"
@@ -179,6 +180,7 @@ export default function ContactForm() {
         <textarea
           id="message"
           rows={5}
+          maxLength={MESSAGE_MAX}
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "message-error" : undefined}
           {...register("message")}
@@ -203,7 +205,7 @@ export default function ContactForm() {
         disabled={isSubmitting}
         onMouseEnter={() => sendRef.current?.startAnimation()}
         onMouseLeave={() => sendRef.current?.stopAnimation()}
-        className="inline-flex items-center self-start justify-center gap-2 px-6 py-3 mt-1 text-sm font-medium transition-opacity rounded-full bg-ink dark:bg-ink-dark text-canvas dark:text-canvas-dark hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex items-center self-start justify-center gap-2 px-6 py-3 mt-1 text-sm font-medium transition-opacity rounded-full bg-ink dark:bg-ink-dark text-canvas dark:text-canvas-dark hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? (
           <>

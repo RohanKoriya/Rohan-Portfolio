@@ -1,17 +1,16 @@
 import { motion } from "motion/react";
-import Badge from "../components/ui/Badge.jsx";
-
+import ScrollHighlightBlock from "../components/ui/ScrollHighlightText.jsx";
 const QUICK_FACTS = [
   { label: "Based in", value: "Mumbai, IN" },
   { label: "Education", value: "B.Sc. IT (2023–2026)" },
-  { label: "Core Stack", value: "React · Node.js · MongoDB" },
+  { label: "Core Stack", value: "React · Node.js · Express · MongoDB" },
   { label: "Status", value: "Available for full-time" },
 ];
 
 const PRINCIPLES = [
   {
     title: "Clean API Design",
-    body: "I keep endpoints predictable and validate data at the boundary..",
+    body: "I keep endpoints predictable and validate data at the boundary.",
   },
   {
     title: "State where it belongs",
@@ -63,24 +62,13 @@ export default function AboutSection() {
               About
             </motion.span>
 
-            <motion.h2
-              variants={itemVariants}
-              className="max-w-lg mt-3 text-3xl font-medium tracking-tight md:text-4xl text-ink dark:text-ink-dark"
-            >
-              I build full-stack web apps that feel simple to use and solid
-              underneath.
-            </motion.h2>
-
-            <motion.p
-              variants={itemVariants}
-              className="max-w-lg mt-5 text-base leading-relaxed text-muted dark:text-muted-dark md:text-lg"
-            >
-              I recently completed my IT degree at Mumbai University. Most of my
-              learning has come from building and shipping end-to-end
-              applications like Ranklytics, LeadFlow, and ChatSphere. I enjoy
-              working across the stack, from interfaces and APIs to the data
-              behind them.
-            </motion.p>
+            {/* Single combined scroll highlight block for sequential highlighting */}
+            <div className="max-w-lg mt-3">
+              <ScrollHighlightBlock
+                headline="I build full-stack web apps that feel simple to use and solid underneath."
+                body="I recently completed my IT degree at Mumbai University. Most of my learning has come from building and shipping end-to-end applications like Ranklytics, LeadFlow, and ChatSphere. I enjoy working across the stack, from interfaces and APIs to the data behind them."
+              />
+            </div>
 
             {/* Quick facts spec sheet */}
             <motion.dl
@@ -111,7 +99,7 @@ export default function AboutSection() {
           >
             <div>
               <motion.span variants={itemVariants} className="eyebrow">
-                How i Work
+                How I Work
               </motion.span>
 
               <div className="flex flex-col mt-3 border-t border-line dark:border-line-dark">
@@ -145,7 +133,6 @@ export default function AboutSection() {
             >
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-
                 <span className="eyebrow text-emerald-600 dark:text-emerald-400">
                   Currently Learning
                 </span>

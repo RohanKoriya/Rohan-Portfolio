@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { GithubIcon, LinkedinIcon, GmailIcon } from "./ui/AnimatedIcons.jsx";
+import { motion } from "motion/react";
+import {
+  ArrowUpIcon,
+  GithubIcon,
+  LinkedinIcon,
+  GmailIcon,
+} from "./ui/AnimatedIcons.jsx";
 import { toast } from "sonner";
 
 function useISTClock() {
@@ -47,6 +53,7 @@ export default function Footer() {
   const time = useISTClock();
   const refs = useRef({});
   const [currentYear, setCurrentYear] = useState("");
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear().toString());
@@ -99,10 +106,27 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Right Column: Copyright */}
-        <p className="text-xs text-muted dark:text-muted-dark">
-          Built by Rohan Koriya {currentYear ? `© ${currentYear}` : ""}.
-        </p>
+        {/* Right Column: Copyright & Back to Top */}
+        <div className="flex items-center justify-between gap-4 sm:justify-end">
+          <p className="text-xs text-muted dark:text-muted-dark">
+            Built by Rohan Koriya {currentYear ? `© ${currentYear}` : ""}.
+          </p>
+
+          <motion.button
+            type="button"
+            onClick={scrollToTop}
+            whileHover={{ y: -2 }}
+            whileTap={{ y: 0 }}
+            aria-label="Back to top"
+            className="group flex items-center gap-1.5 rounded-lg border border-line/80 dark:border-line-dark/80 bg-surface/40 dark:bg-surface-dark/40 px-2.5 py-1.5 font-mono text-xs text-muted dark:text-muted-dark transition-colors duration-200 hover:border-line dark:hover:border-line-dark hover:text-ink dark:hover:text-ink-dark backdrop-blur-sm"
+          >
+            <span>Top</span>
+            <ArrowUpIcon
+              size={14}
+              className="transition-transform duration-200 group-hover:-translate-y-0.5"
+            />
+          </motion.button>
+        </div>
       </div>
     </footer>
   );

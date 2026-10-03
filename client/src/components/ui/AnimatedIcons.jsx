@@ -124,6 +124,15 @@ export const GmailIcon = createAnimatedIcon({
   ),
 });
 
+export const ArrowUpIcon = createAnimatedIcon({
+  displayName: "ArrowUpIcon",
+  animate: {
+    keyframes: { y: [0, -3, 0] },
+    rest: { y: 0 },
+  },
+  paths: <path d="M12 19V5m-7 7l7-7l7 7" />,
+});
+
 export const DownloadIcon = createAnimatedIcon({
   displayName: "DownloadIcon",
   animate: {

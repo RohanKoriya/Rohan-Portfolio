@@ -15,7 +15,7 @@ export const projects = [
       "One-click PDF export for audit reports",
     ],
     links: {
-      github: "https://github.com/rohankoriya/ranklytics",
+      github: "https://github.com/RohanKoriya/Ranklytics-AI-Powered-SEO-Analytics-Platform",
       demo: "https://seo-rank-tracker-swart.vercel.app",
     },
   },
@@ -35,7 +35,7 @@ export const projects = [
       "Containerized with Docker for consistent deploys",
     ],
     links: {
-      github: "https://github.com/rohankoriya/leadflow",
+      github: "https://github.com/RohanKoriya/LeadFlow-CRM-Platform",
       demo: "https://smart-leads-dashboard-n2ug.onrender.com",
     },
   },
@@ -55,7 +55,7 @@ export const projects = [
       "Typing indicators and read receipts",
     ],
     links: {
-      github: "https://github.com/rohankoriya/chatsphere",
+      github: "https://github.com/RohanKoriya/ChatSphere",
       demo: "https://chatsphere-s8lq.onrender.com/login",
     },
   },

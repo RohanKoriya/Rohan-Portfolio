@@ -1,5 +1,6 @@
 const validator = require("validator");
 const Contact = require("../models/Contact");
+const { sendContactNotification } = require("../services/emailService");
 
 // Strips HTML/script tags from user input without pulling in a full sanitizer library.
 function stripTags(value = "") {
@@ -42,7 +43,14 @@ async function createContact(req, res, next) {
       return res.status(400).json({ success: false, message: "Validation failed.", errors });
     }
 
+    // 1. Save to MongoDB
     await Contact.create(data);
+
+    // 2. Dispatch notification email asynchronously in background
+    // (Non-blocking: If email service is temporarily slow or down, client still receives fast response)
+    sendContactNotification(data).catch((err) => {
+      console.error("Failed to send notification email:", err);
+    });
 
     return res.status(201).json({ success: true, message: "Message received safely." });
   } catch (error) {

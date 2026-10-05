@@ -17,6 +17,7 @@
     "helmet": "^8.0.0",
     "mongodb": "^7.6.0",
     "mongoose": "^8.9.3",
+    "resend": "^6.32.0",
     "validator": "^13.12.0"
   }
 }

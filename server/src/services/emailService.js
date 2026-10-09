@@ -23,7 +23,7 @@ function escapeHtml(value = "") {
 function getContactEmailTemplate({ name, email, message }) {
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
-  const safeMessage = escapeHtml(message);
+  const safeMessage = escapeHtml(message.trim());
 
   const replyEmail = encodeURIComponent(email);
   const replySubject = encodeURIComponent("Re: Portfolio Inquiry");
@@ -258,8 +258,7 @@ function getContactEmailTemplate({ name, email, message }) {
                       white-space: pre-wrap;
                       word-break: break-word;
                     "
-                  >
-                    ${safeMessage}
+                  >${safeMessage}
                   </td>
                 </tr>
               </table>

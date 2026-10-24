@@ -28,6 +28,8 @@ export const skillGroups = [
       { name: "MongoDB", icon: "Database" },
       { name: "Mongoose", icon: "Link2" },
       { name: "MySQL", icon: "Table2" },
+      { name: "PostgreSQL", icon: "Table2" },
+      { name: "Redis", icon: "Database" },
       { name: "Git / GitHub", icon: "GitBranch" },
       { name: "Docker", icon: "Container" },
       { name: "Vercel", icon: "Triangle" },

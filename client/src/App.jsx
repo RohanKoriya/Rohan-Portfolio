@@ -5,7 +5,6 @@ import { Toaster } from "sonner";
 import BlurText from "./components/ui/Blurtext.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
-import CommandPalette from "./components/CommandPalette.jsx";
 import CustomCursor from "./components/Customcursor.jsx";
 import ScrollProgress from "./components/ScrollProgress.jsx";
 import { ThemeProvider } from "./hooks/useTheme.jsx";
@@ -37,25 +36,10 @@ export default function App() {
     return window.sessionStorage.getItem(SESSION_KEY) === "true";
   });
   const [progress, setProgress] = useState(0);
-  const [paletteOpen, setPaletteOpen] = useState(false);
   const startRef = useRef(null);
 
   const statusIndex =
     progress > 75 ? 3 : progress > 50 ? 2 : progress > 25 ? 1 : 0;
-
-  // Cmd+K / Ctrl+K command palette shortcut
-  useEffect(() => {
-    const handler = (event) => {
-      const isMac = navigator.platform.toUpperCase().includes("MAC");
-      const modifierPressed = isMac ? event.metaKey : event.ctrlKey;
-      if (modifierPressed && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        setPaletteOpen((open) => !open);
-      }
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, []);
 
   // Intro progress counter — a single requestAnimationFrame loop instead of
   // a setInterval chain, so it's one state update per frame, not per tick.
@@ -184,17 +168,14 @@ export default function App() {
 
       <div
         aria-hidden={!introFinished}
-        inert={!introFinished}
+        inert={!introFinished ? "" : undefined}
         className={`min-h-screen transition-opacity duration-700 ${
           introFinished ? "opacity-100" : "opacity-0"
         }`}
       >
         <Toaster position="bottom-right" richColors closeButton />
         <Navbar onOpenPalette={() => setPaletteOpen(true)} />
-        <CommandPalette
-          open={paletteOpen}
-          onClose={() => setPaletteOpen(false)}
-        />
+
         <main>
           <HeroSection />
           <ProjectsSection />

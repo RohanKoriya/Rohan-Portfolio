@@ -9,6 +9,7 @@ import {
 } from "../components/ui/AnimatedIcons.jsx";
 import { RESUME_FILE } from "../data/Site.js";
 import { toast } from "sonner";
+import { Check } from "lucide-react";
 
 const EASE = [0.22, 1, 0.36, 1];
 const EMAIL = "koriyarohan123@gmail.com";
@@ -38,6 +39,7 @@ export default function HeroSection({ ready = true }) {
   const [emailCopied, setEmailCopied] = useState(false);
   const [emailHovered, setEmailHovered] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
+  const [resumeDownloaded, setResumeDownloaded] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => setMumbaiTime(formatMumbaiTime()), 10000);
@@ -76,20 +78,22 @@ export default function HeroSection({ ready = true }) {
     <section id="top" className="relative pb-20 pt-36 md:pb-32 md:pt-48">
       <div className="container-content">
         <div className="flex flex-col items-center max-w-3xl mx-auto text-center">
-          {/* Status: the most useful fact for a recruiter comes first */}
           <motion.div
             {...fade(0.1)}
-            className="relative mb-8 inline-flex max-w-full items-center gap-2.5 px-4 py-2"
+            className="flex justify-center w-full mb-6 sm:mb-8"
           >
-            <span className="absolute left-0 top-0 h-2.5 w-2.5 border-l-2 border-t-2 border-ink/25 dark:border-ink-dark/25" />
-            <span className="absolute right-0 top-0 h-2.5 w-2.5 border-r-2 border-t-2 border-ink/25 dark:border-ink-dark/25" />
-            <span className="absolute bottom-0 left-0 h-2.5 w-2.5 border-b-2 border-l-2 border-ink/25 dark:border-ink-dark/25" />
-            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 border-b-2 border-r-2 border-ink/25 dark:border-ink-dark/25" />
-
-            <span className="w-2 h-2 rounded-full shrink-0 bg-signal" />
-            <span className="font-mono text-[11px] font-medium uppercase leading-relaxed tracking-[0.16em] text-muted dark:text-muted-dark">
-              Available for full-time roles • Mumbai {mumbaiTime} IST
-            </span>
+            <div className="inline-flex items-center max-w-full gap-2 px-1 py-2">
+              <span className="text-center font-mono text-[10px] font-medium uppercase leading-relaxed tracking-[0.12em] text-muted dark:text-muted-dark sm:text-[11px] sm:tracking-[0.14em]">
+                <span className="font-semibold text-signal">Available</span> for
+                full-time roles
+                <span className="hidden sm:inline"> · </span>
+                <span className="sm:hidden"> </span>
+                <span className="whitespace-nowrap">
+                  <span className="sm:hidden">· </span>
+                  Mumbai {mumbaiTime} IST
+                </span>
+              </span>
+            </div>
           </motion.div>
 
           {/* Name: the one line that gets the mask reveal */}
@@ -130,16 +134,69 @@ export default function HeroSection({ ready = true }) {
             <Button as="a" href="#work">
               View my work
             </Button>
+
             <Button
               as="a"
               href={RESUME_FILE}
               download
               variant="secondary"
-              onMouseEnter={() => downloadRef.current?.startAnimation()}
+              onClick={() => {
+                setResumeDownloaded(true);
+
+                window.setTimeout(() => {
+                  setResumeDownloaded(false);
+                }, 2500);
+              }}
+              onMouseEnter={() => {
+                if (!resumeDownloaded) {
+                  downloadRef.current?.startAnimation();
+                }
+              }}
               onMouseLeave={() => downloadRef.current?.stopAnimation()}
             >
-              <DownloadIcon ref={downloadRef} size={16} />
-              Download resume
+              <span className="relative inline-grid w-4 h-4 shrink-0 place-items-center">
+                <AnimatePresence mode="wait" initial={false}>
+                  {resumeDownloaded ? (
+                    <motion.span
+                      key="success"
+                      initial={{ opacity: 0, scale: 0.5, y: 3 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.7, y: -2 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 450,
+                        damping: 20,
+                      }}
+                      className="absolute inset-0 grid place-items-center text-signal"
+                    >
+                      <Check size={17} strokeWidth={3} />
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="download"
+                      initial={{ opacity: 0, scale: 0.7, y: -3 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.6, y: -3 }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      className="absolute inset-0 grid place-items-center"
+                    >
+                      <DownloadIcon ref={downloadRef} size={16} />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </span>
+
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={resumeDownloaded ? "downloaded" : "default"}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -3 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                >
+                  {resumeDownloaded ? "Resume downloaded" : "Download resume"}
+                </motion.span>
+              </AnimatePresence>
             </Button>
           </motion.div>
 

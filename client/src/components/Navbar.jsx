@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, Command } from "lucide-react";
+import { Menu, X, Check } from "lucide-react";
 import ThemeToggle from "./ui/ThemeToggle.jsx";
 import Button from "./ui/Button.jsx";
 import { DownloadIcon, LetterRIcon } from "./ui/AnimatedIcons.jsx";
@@ -16,23 +16,14 @@ const NAV_LINKS = [
 
 const SECTION_IDS = NAV_LINKS.map((link) => link.href.replace("#", ""));
 
-// Same check App.jsx uses for the Cmd/Ctrl+K handler, so the label always
-// matches the key that actually works.
-function useIsMac() {
-  const [isMac, setIsMac] = useState(false);
-  useEffect(() => {
-    setIsMac(navigator.platform.toUpperCase().includes("MAC"));
-  }, []);
-  return isMac;
-}
-
-export default function Navbar({ onOpenPalette }) {
+export default function Navbar() {
   const [open, setOpen] = useState(false);
   const drawerRef = useRef(null);
   const monogramRef = useRef(null);
   const downloadRef = useRef(null);
   const activeSection = useActiveSection(SECTION_IDS);
-  const isMac = useIsMac();
+  const [resumeDownloaded, setResumeDownloaded] = useState(false);
+  const downloadTimeoutRef = useRef(null);
 
   useEffect(() => {
     if (!open) return;
@@ -122,37 +113,64 @@ export default function Navbar({ onOpenPalette }) {
 
           {/* Desktop actions */}
           <div className="items-center hidden gap-2 md:flex justify-self-end">
-            <button
-              type="button"
-              onClick={onOpenPalette}
-              aria-label="Open command palette"
-              aria-keyshortcuts={isMac ? "Meta+K" : "Control+K"}
-              className="flex items-center gap-1.5 rounded-full border border-line dark:border-line-dark bg-surface/60 dark:bg-surface-dark/60 px-3 py-1.5 text-xs font-mono text-muted dark:text-muted-dark transition-colors hover:border-ink/30 dark:hover:border-ink-dark/30 hover:text-ink dark:hover:text-ink-dark"
-            >
-              {isMac ? (
-                <>
-                  <Command size={12} strokeWidth={2} />
-                  <kbd className="text-[10px] font-semibold tracking-wider">
-                    K
-                  </kbd>
-                </>
-              ) : (
-                <kbd className="text-[10px] font-semibold tracking-wider">
-                  Ctrl K
-                </kbd>
-              )}
-            </button>
             <ThemeToggle />
+
             <Button
               as="a"
               href={RESUME_FILE}
               download
               variant="secondary"
               className="!px-4 !py-1.5 text-xs font-medium"
-              onMouseEnter={() => downloadRef.current?.startAnimation()}
+              onClick={() => {
+                if (downloadTimeoutRef.current) {
+                  window.clearTimeout(downloadTimeoutRef.current);
+                }
+
+                setResumeDownloaded(true);
+
+                downloadTimeoutRef.current = window.setTimeout(() => {
+                  setResumeDownloaded(false);
+                  downloadTimeoutRef.current = null;
+                }, 2500);
+              }}
+              onMouseEnter={() => {
+                if (!resumeDownloaded) {
+                  downloadRef.current?.startAnimation();
+                }
+              }}
               onMouseLeave={() => downloadRef.current?.stopAnimation()}
             >
-              <DownloadIcon ref={downloadRef} size={15} />
+              <span className="relative inline-grid h-[15px] w-[15px] shrink-0 place-items-center">
+                <AnimatePresence mode="wait" initial={false}>
+                  {resumeDownloaded ? (
+                    <motion.span
+                      key="success"
+                      initial={{ opacity: 0, scale: 0.5, y: 3 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.7, y: -2 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 450,
+                        damping: 20,
+                      }}
+                      className="absolute inset-0 grid place-items-center text-signal"
+                    >
+                      <Check size={17} strokeWidth={3} />
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="download"
+                      initial={{ opacity: 0, scale: 0.7, y: -3 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.6, y: -3 }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      className="absolute inset-0 grid place-items-center"
+                    >
+                      <DownloadIcon ref={downloadRef} size={15} />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </span>
               Resume
             </Button>
           </div>
@@ -222,29 +240,61 @@ export default function Navbar({ onOpenPalette }) {
                   </a>
                 ))}
               </nav>
-
-              <div className="flex flex-col gap-3 pt-6 mt-auto border-t border-line dark:border-line-dark">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    onOpenPalette();
-                  }}
-                  className="flex items-center gap-2 w-full rounded-xl border border-line dark:border-line-dark bg-surface/60 dark:bg-surface-dark/60 px-4 py-2.5 text-xs font-mono text-muted dark:text-muted-dark"
-                >
-                  <Command size={14} /> Command Palette
-                </button>
-
-                <div className="flex items-center justify-between pt-2">
+              <div className="pt-6 mt-auto border-t border-line dark:border-line-dark">
+                <div className="flex items-center justify-between">
                   <ThemeToggle />
+
                   <Button
                     as="a"
                     href={RESUME_FILE}
                     download
                     variant="secondary"
                     className="!px-4 !py-2 text-xs"
+                    onClick={() => {
+                      if (downloadTimeoutRef.current) {
+                        window.clearTimeout(downloadTimeoutRef.current);
+                      }
+
+                      setResumeDownloaded(true);
+
+                      downloadTimeoutRef.current = window.setTimeout(() => {
+                        setResumeDownloaded(false);
+                        downloadTimeoutRef.current = null;
+                      }, 2500);
+                    }}
                   >
-                    <DownloadIcon size={15} /> Resume
+                    <span className="relative inline-grid h-[15px] w-[15px] shrink-0 place-items-center">
+                      <AnimatePresence mode="wait" initial={false}>
+                        {resumeDownloaded ? (
+                          <motion.span
+                            key="success"
+                            initial={{ opacity: 0, scale: 0.5, y: 3 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.7, y: -2 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 450,
+                              damping: 20,
+                            }}
+                            className="absolute inset-0 grid place-items-center text-signal"
+                          >
+                            <Check size={17} strokeWidth={3} />
+                          </motion.span>
+                        ) : (
+                          <motion.span
+                            key="download"
+                            initial={{ opacity: 0, scale: 0.7, y: -3 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.6, y: -3 }}
+                            transition={{ duration: 0.18, ease: "easeOut" }}
+                            className="absolute inset-0 grid place-items-center"
+                          >
+                            <DownloadIcon size={15} />
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </span>
+                    Resume
                   </Button>
                 </div>
               </div>

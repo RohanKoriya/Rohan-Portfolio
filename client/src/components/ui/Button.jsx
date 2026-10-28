@@ -3,7 +3,8 @@ const variants = {
     "bg-ink text-canvas dark:bg-ink-dark dark:text-canvas-dark hover:opacity-90 border border-transparent",
   secondary:
     "bg-transparent text-ink dark:text-ink-dark border border-line dark:border-line-dark hover:border-ink/40 dark:hover:border-ink-dark/40",
-  ghost: "bg-transparent text-ink dark:text-ink-dark hover:bg-surface dark:hover:bg-surface-dark border border-transparent",
+  ghost:
+    "bg-transparent text-ink dark:text-ink-dark hover:bg-surface dark:hover:bg-surface-dark border border-transparent",
 };
 
 export default function Button({

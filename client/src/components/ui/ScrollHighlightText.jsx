@@ -24,7 +24,7 @@ export default function ScrollHighlightBlock({
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 0.88", "start 0.18"],
+    offset: ["start 0.88", "start 0.38"],
   });
 
   const smoothProgress = useSpring(scrollYProgress, {

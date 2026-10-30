@@ -110,3 +110,126 @@ textarea:focus-visible,
 ::view-transition-new(root) {
   z-index: 2;
 }
+
+.dino-game {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.dino-game__canvas {
+  display: block;
+  width: 100%;
+  height: 110px;
+  image-rendering: pixelated;
+}
+
+.dino-game__action {
+  position: absolute;
+  top: 12px;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2;
+}
+
+.dino-game,
+.dino-game__canvas {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.dino-game:focus,
+.dino-game:focus-visible,
+.dino-game__canvas:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dino-game__play {
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: #999;
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.dino-game__play:hover {
+  color: #dedede;
+}
+
+.dino-game__play:focus-visible {
+  outline: 1px dashed currentColor;
+  outline-offset: 4px;
+}
+
+.dino-game__result,
+.dino-game__hint {
+  color: #777;
+  font-family: monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.dino-game__hint {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .dino-game {
+    height: 115px;
+  }
+
+  .dino-game__canvas {
+    height: 115px;
+  }
+
+  .dino-game__action {
+    top: 10px;
+    right: 16px;
+    left: auto;
+    gap: 8px;
+  }
+
+  .dino-game__play {
+    font-size: 10px;
+  }
+
+  .dino-game__result {
+    font-size: 9px;
+  }
+
+  .dino-game__hint {
+    top: 30px;
+    left: auto;
+    right: 16px;
+    transform: none;
+    font-size: 8px;
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dino-game__play {
+    transition: none;
+  }
+}

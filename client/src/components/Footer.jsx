@@ -7,6 +7,7 @@ import {
   GmailIcon,
 } from "./ui/AnimatedIcons.jsx";
 import { toast } from "sonner";
+import DinoGame from "./DinoGame.jsx";
 
 // Tip: move this into Site.js next to RESUME_FILE and import it, so the
 // Hero and Footer can't drift apart.
@@ -82,9 +83,14 @@ export default function Footer() {
   };
 
   return (
-    <footer className="transition-colors duration-200 border-t border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark">
-      {/* Three columns (1fr / auto / 1fr) keep the links truly centered.
-          With justify-between they drift toward whichever side is narrower. */}
+    //   <footer className="transition-colors duration-200 border-t border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark">
+    // <div className="container-content grid gap-6 py-10 sm:grid-cols-[1fr_auto_1fr] sm:items-center"></div>
+    <footer className="transition-colors duration-200 bg-canvas dark:bg-canvas-dark">
+      {/* Full-width Dino game */}
+      <div className="w-full">
+        <DinoGame />
+      </div>
+
       <div className="container-content grid gap-6 py-10 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
         {/* Left: identity */}
         <div className="flex flex-col gap-1 sm:justify-self-start">

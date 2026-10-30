@@ -5,7 +5,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="py-24 border-t md:py-32 border-line dark:border-line-dark"
+      className="pt-24 pb-10 md:pt-28 md:pb-12 border-line dark:border-line-dark"
     >
       <div className="container-content">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">

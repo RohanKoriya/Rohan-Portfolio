@@ -170,19 +170,14 @@ export default function HeroSection({ ready = true }) {
   return (
     <section
       id="top"
-      className="
-        relative overflow-hidden
-        pb-24 pt-32
-        sm:pb-28 sm:pt-40
-        md:pb-32 md:pt-44
-      "
+      className="relative pt-32 pb-24 overflow-hidden sm:pb-28 sm:pt-40 md:pb-32 md:pt-44"
     >
       <div className="container-content">
-        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+        <div className="flex flex-col items-center max-w-3xl mx-auto text-center">
           {/* Availability and local time */}
           <motion.div
             {...fade(0.1, 6)}
-            className="mb-6 flex items-center justify-center"
+            className="flex items-center justify-center mb-6"
           >
             <div
               className="
@@ -196,7 +191,7 @@ export default function HeroSection({ ready = true }) {
             >
               <span className="inline-flex items-center gap-2">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-30" />
+                  <span className="absolute inline-flex w-full h-full rounded-full animate-ping bg-signal opacity-30" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
                 </span>
 
@@ -242,28 +237,13 @@ export default function HeroSection({ ready = true }) {
           {/* Role and location */}
           <motion.div
             {...fade(0.48)}
-            className="
-              mt-6 flex flex-wrap items-center
-              justify-center gap-x-3 gap-y-2
-            "
+            className="flex flex-wrap items-center justify-center mt-6 gap-x-3 gap-y-2"
           >
-            <span
-              className="
-                text-lg font-medium tracking-tight
-                text-ink dark:text-ink-dark
-                sm:text-xl
-              "
-            >
+            <span className="text-lg font-medium tracking-tight text-ink dark:text-ink-dark sm:text-xl">
               Full-Stack Developer
             </span>
 
-            <span
-              className="
-                hidden h-4 w-px
-                bg-border dark:bg-border-dark
-                sm:block
-              "
-            />
+            <span className="hidden w-px h-4 bg-border dark:bg-border-dark sm:block" />
 
             <span
               className="
@@ -293,12 +273,9 @@ export default function HeroSection({ ready = true }) {
           {/* Action buttons */}
           <motion.div
             {...fade(0.72)}
-            className="
-              mt-9 flex w-full flex-col sm:flex-row
-              items-center justify-center gap-3
-            "
+            className="flex flex-col items-center justify-center gap-3 mt-9 sm:flex-row"
           >
-            <Button as="a" href="#work" className="w-full sm:w-auto">
+            <Button as="a" href="#work" className="w-48 sm:w-auto">
               View my work
             </Button>
 
@@ -307,7 +284,7 @@ export default function HeroSection({ ready = true }) {
               href={RESUME_FILE}
               download
               variant="secondary"
-              className="w-full sm:w-auto"
+              className="w-48 sm:w-auto"
               onClick={() => setResumeDownloaded(true)}
               onMouseEnter={() => {
                 if (!resumeDownloaded) {
@@ -316,7 +293,7 @@ export default function HeroSection({ ready = true }) {
               }}
               onMouseLeave={() => downloadRef.current?.stopAnimation()}
             >
-              <span className="relative grid h-4 w-4 shrink-0 place-items-center">
+              <span className="relative grid w-4 h-4 shrink-0 place-items-center">
                 <AnimatePresence mode="wait" initial={false}>
                   {resumeDownloaded ? (
                     <motion.span
@@ -329,10 +306,7 @@ export default function HeroSection({ ready = true }) {
                         stiffness: 450,
                         damping: 20,
                       }}
-                      className="
-                        absolute inset-0 grid place-items-center
-                        text-signal
-                      "
+                      className="absolute inset-0 grid place-items-center text-signal"
                     >
                       <Check size={17} strokeWidth={3} />
                     </motion.span>
@@ -368,7 +342,7 @@ export default function HeroSection({ ready = true }) {
           {/* Social links */}
           <motion.div
             {...fade(0.86)}
-            className="mt-10 flex items-center justify-center gap-5"
+            className="flex items-center justify-center gap-5 mt-10"
           >
             {socialLinks.map(({ label, href, Icon }) => (
               <SocialLink

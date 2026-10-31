@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+
 import Button from "../components/ui/Button.jsx";
 import {
   GithubIcon,
@@ -7,12 +8,18 @@ import {
   GmailIcon,
   DownloadIcon,
 } from "../components/ui/AnimatedIcons.jsx";
+
 import { RESUME_FILE } from "../data/Site.js";
 import { toast } from "sonner";
-import { Check } from "lucide-react";
+import { Check, MapPin } from "lucide-react";
 
 const EASE = [0.22, 1, 0.36, 1];
 const EMAIL = "koriyarohan123@gmail.com";
+
+const SOCIAL_CLASS =
+  "inline-flex items-center justify-center p-2 text-muted " +
+  "transition-colors duration-200 hover:text-ink " +
+  "dark:text-muted-dark dark:hover:text-ink-dark";
 
 const formatMumbaiTime = () =>
   new Intl.DateTimeFormat("en-US", {
@@ -22,16 +29,74 @@ const formatMumbaiTime = () =>
     hour12: true,
   }).format(new Date());
 
-/**
- * `ready` lets the parent hold the entrance until the page is actually
- * visible. The intro screen plays on top of the page, so animations that
- * start on mount finish behind it and are never seen. In App.jsx:
- *   <HeroSection ready={introFinished} />
- * Without the prop it defaults to true and plays on mount, as before.
- */
+/* Reusable social link */
+function SocialLink({
+  label,
+  href,
+  Icon,
+  hovered,
+  focused,
+  setHovered,
+  setFocused,
+}) {
+  const iconRef = useRef(null);
+  const active = hovered === label || focused === label;
+
+  return (
+    <div className="relative flex items-center justify-center">
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={label}
+        className={SOCIAL_CLASS}
+        onMouseEnter={() => {
+          setHovered(label);
+          iconRef.current?.startAnimation();
+        }}
+        onMouseLeave={() => {
+          setHovered(null);
+          iconRef.current?.stopAnimation();
+        }}
+        onFocus={(event) =>
+          setFocused(
+            event.currentTarget.matches(":focus-visible") ? label : null,
+          )
+        }
+        onBlur={() => setFocused(null)}
+      >
+        <Icon ref={iconRef} size={19} />
+      </a>
+
+      <AnimatePresence>
+        {active && (
+          <motion.span
+            aria-hidden="true"
+            style={{ x: "-50%" }}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="
+              pointer-events-none absolute bottom-full left-1/2
+              z-20 mb-2 whitespace-nowrap rounded-md
+              bg-ink px-2.5 py-1 font-mono
+              text-[11px] font-medium text-canvas shadow-sm
+              dark:bg-ink-dark dark:text-canvas-dark
+            "
+          >
+            {label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function HeroSection({ ready = true }) {
-  const iconRefs = useRef({});
+  const emailIconRef = useRef(null);
   const downloadRef = useRef(null);
+
   const reduced = useReducedMotion();
   const show = ready || reduced;
 
@@ -43,16 +108,40 @@ export default function HeroSection({ ready = true }) {
   const [socialFocused, setSocialFocused] = useState(null);
   const [resumeDownloaded, setResumeDownloaded] = useState(false);
 
+  /* Mumbai clock */
   useEffect(() => {
-    const id = setInterval(() => setMumbaiTime(formatMumbaiTime()), 10000);
+    const id = setInterval(() => {
+      setMumbaiTime(formatMumbaiTime());
+    }, 10000);
+
     return () => clearInterval(id);
   }, []);
 
+  /* Email copy feedback */
   useEffect(() => {
     if (!emailCopied) return;
+
     const id = setTimeout(() => setEmailCopied(false), 2000);
     return () => clearTimeout(id);
   }, [emailCopied]);
+
+  /* Resume feedback */
+  useEffect(() => {
+    if (!resumeDownloaded) return;
+
+    const id = setTimeout(() => setResumeDownloaded(false), 2500);
+    return () => clearTimeout(id);
+  }, [resumeDownloaded]);
+
+  const fade = (delay, y = 8) => ({
+    initial: reduced ? false : { opacity: 0, y },
+    animate: show ? { opacity: 1, y: 0 } : { opacity: 0, y },
+    transition: {
+      duration: 0.7,
+      delay,
+      ease: EASE,
+    },
+  });
 
   const handleCopyEmail = async () => {
     try {
@@ -63,49 +152,86 @@ export default function HeroSection({ ready = true }) {
     }
   };
 
-  // The tooltip is the success feedback, so it also shows right after a copy.
-  // That covers touch devices, where there is no hover to trigger it.
-  const showTip = emailHovered || emailFocused || emailCopied;
+  const socialLinks = [
+    {
+      label: "GitHub",
+      href: "https://github.com/rohankoriya",
+      Icon: GithubIcon,
+    },
+    {
+      label: "LinkedIn",
+      href: "https://linkedin.com/in/rohankoriya",
+      Icon: LinkedinIcon,
+    },
+  ];
 
-  const fade = (delay, y = 0) => ({
-    initial: reduced ? false : { opacity: 0, y },
-    animate: show ? { opacity: 1, y: 0 } : { opacity: 0, y },
-    transition: { duration: 0.7, delay, ease: EASE },
-  });
-
-  const socialLink =
-    "p-1.5 text-muted transition-colors hover:text-ink dark:text-muted-dark dark:hover:text-ink-dark";
+  const showEmailTip = emailHovered || emailFocused || emailCopied;
 
   return (
-    <section id="top" className="relative pb-20 pt-36 md:pb-32 md:pt-48">
+    <section
+      id="top"
+      className="
+        relative overflow-hidden
+        pb-24 pt-32
+        sm:pb-28 sm:pt-40
+        md:pb-32 md:pt-44
+      "
+    >
       <div className="container-content">
-        <div className="flex flex-col items-center max-w-3xl mx-auto text-center">
+        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+          {/* Availability and local time */}
           <motion.div
-            {...fade(0.1)}
-            className="flex justify-center w-full mb-6 sm:mb-8"
+            {...fade(0.1, 6)}
+            className="mb-6 flex items-center justify-center"
           >
-            <div className="inline-flex items-center max-w-full gap-2 px-1 py-2">
-              <span className="text-center font-mono text-[10px] font-medium uppercase leading-relaxed tracking-[0.12em] text-muted dark:text-muted-dark sm:text-[11px] sm:tracking-[0.14em]">
-                <span className="font-semibold text-signal">Available</span> for
-                full-time roles
-                <span className="hidden sm:inline"> · </span>
-                <span className="sm:hidden"> </span>
-                <span className="whitespace-nowrap">
-                  <span className="sm:hidden">· </span>
-                  Mumbai {mumbaiTime} IST
+            <div
+              className="
+                inline-flex flex-wrap items-center justify-center
+                gap-x-2.5 gap-y-1
+                font-mono text-[10px] font-medium uppercase
+                tracking-[0.13em]
+                text-muted dark:text-muted-dark
+                sm:text-[11px] sm:tracking-[0.15em]
+              "
+            >
+              <span className="inline-flex items-center gap-2">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-30" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+                </span>
+
+                <span>
+                  <span className="font-semibold text-signal">Available</span>{" "}
+                  for full-time roles
                 </span>
               </span>
+
+              <span className="text-border dark:text-border-dark">/</span>
+
+              <span className="whitespace-nowrap">{mumbaiTime} IST</span>
             </div>
           </motion.div>
 
-          {/* Name: the one line that gets the mask reveal */}
-          <h1 className="text-[clamp(3rem,11vw,6rem)] font-medium leading-[0.98] tracking-tight text-ink dark:text-ink-dark">
-            <span className="-my-[0.12em] block overflow-hidden py-[0.12em]">
+          {/* Main heading */}
+          <h1
+            className="
+    w-full max-w-full
+    text-[clamp(2.8rem,10.5vw,6.5rem)]
+    font-medium leading-[0.94]
+    tracking-[-0.065em]
+    text-ink dark:text-ink-dark
+  "
+          >
+            <span className="block overflow-hidden py-[0.12em]">
               <motion.span
-                className="block"
+                className="block whitespace-nowrap"
                 initial={reduced ? false : { y: "110%" }}
                 animate={{ y: show ? "0%" : "110%" }}
-                transition={{ duration: 0.95, delay: 0.2, ease: EASE }}
+                transition={{
+                  duration: 0.95,
+                  delay: 0.2,
+                  ease: EASE,
+                }}
               >
                 Rohan Koriya
                 <span className="text-signal">.</span>
@@ -113,27 +239,66 @@ export default function HeroSection({ ready = true }) {
             </span>
           </h1>
 
-          {/* Role and pitch are separate, so they don't read as one run-on line */}
-          <motion.p
-            {...fade(0.5, 8)}
-            className="mt-5 text-xl font-medium tracking-tight text-ink dark:text-ink-dark md:text-2xl"
-          >
-            Full-Stack Developer
-          </motion.p>
-
-          <motion.p
-            {...fade(0.62, 8)}
-            className="max-w-xl mt-4 text-base leading-relaxed text-muted dark:text-muted-dark md:text-lg"
-          >
-            I build web apps with React, Node.js, and MongoDB — from the screens
-            people use to the database behind them.
-          </motion.p>
-
+          {/* Role and location */}
           <motion.div
-            {...fade(0.75, 8)}
-            className="flex flex-wrap items-center justify-center gap-4 mt-10"
+            {...fade(0.48)}
+            className="
+              mt-6 flex flex-wrap items-center
+              justify-center gap-x-3 gap-y-2
+            "
           >
-            <Button as="a" href="#work">
+            <span
+              className="
+                text-lg font-medium tracking-tight
+                text-ink dark:text-ink-dark
+                sm:text-xl
+              "
+            >
+              Full-Stack Developer
+            </span>
+
+            <span
+              className="
+                hidden h-4 w-px
+                bg-border dark:bg-border-dark
+                sm:block
+              "
+            />
+
+            <span
+              className="
+                inline-flex items-center gap-1.5
+                text-sm text-muted dark:text-muted-dark
+              "
+            >
+              <MapPin size={14} strokeWidth={1.7} />
+              Mumbai, India
+            </span>
+          </motion.div>
+
+          {/* Introduction */}
+          <motion.p
+            {...fade(0.58)}
+            className="
+              mt-5 max-w-[34rem] px-2
+              text-[15px] leading-[1.85]
+              text-muted dark:text-muted-dark
+              sm:text-base
+            "
+          >
+            I build web applications with React, Node.js, and MongoDB — from the
+            interfaces people use to the systems behind them.
+          </motion.p>
+
+          {/* Action buttons */}
+          <motion.div
+            {...fade(0.72)}
+            className="
+              mt-9 flex w-full flex-col sm:flex-row
+              items-center justify-center gap-3
+            "
+          >
+            <Button as="a" href="#work" className="w-full sm:w-auto">
               View my work
             </Button>
 
@@ -142,13 +307,8 @@ export default function HeroSection({ ready = true }) {
               href={RESUME_FILE}
               download
               variant="secondary"
-              onClick={() => {
-                setResumeDownloaded(true);
-
-                window.setTimeout(() => {
-                  setResumeDownloaded(false);
-                }, 2500);
-              }}
+              className="w-full sm:w-auto"
+              onClick={() => setResumeDownloaded(true)}
               onMouseEnter={() => {
                 if (!resumeDownloaded) {
                   downloadRef.current?.startAnimation();
@@ -156,7 +316,7 @@ export default function HeroSection({ ready = true }) {
               }}
               onMouseLeave={() => downloadRef.current?.stopAnimation()}
             >
-              <span className="relative inline-grid w-4 h-4 shrink-0 place-items-center">
+              <span className="relative grid h-4 w-4 shrink-0 place-items-center">
                 <AnimatePresence mode="wait" initial={false}>
                   {resumeDownloaded ? (
                     <motion.span
@@ -169,7 +329,10 @@ export default function HeroSection({ ready = true }) {
                         stiffness: 450,
                         damping: 20,
                       }}
-                      className="absolute inset-0 grid place-items-center text-signal"
+                      className="
+                        absolute inset-0 grid place-items-center
+                        text-signal
+                      "
                     >
                       <Check size={17} strokeWidth={3} />
                     </motion.span>
@@ -179,7 +342,7 @@ export default function HeroSection({ ready = true }) {
                       initial={{ opacity: 0, scale: 0.7, y: -3 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.6, y: -3 }}
-                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      transition={{ duration: 0.18 }}
                       className="absolute inset-0 grid place-items-center"
                     >
                       <DownloadIcon ref={downloadRef} size={16} />
@@ -194,7 +357,7 @@ export default function HeroSection({ ready = true }) {
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -3 }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  transition={{ duration: 0.18 }}
                 >
                   {resumeDownloaded ? "Resume downloaded" : "Download resume"}
                 </motion.span>
@@ -202,147 +365,70 @@ export default function HeroSection({ ready = true }) {
             </Button>
           </motion.div>
 
-          <motion.div {...fade(0.9)} className="flex items-center gap-5 mt-12">
-            <div className="relative flex items-center">
-              <a
-                href="https://github.com/rohankoriya"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className={socialLink}
-                onMouseEnter={() => {
-                  setSocialHovered("GitHub");
-                  iconRefs.current["GitHub"]?.startAnimation();
-                }}
-                onMouseLeave={() => {
-                  setSocialHovered(null);
-                  iconRefs.current["GitHub"]?.stopAnimation();
-                }}
-                onFocus={(event) =>
-                  setSocialFocused(
-                    event.currentTarget.matches(":focus-visible")
-                      ? "GitHub"
-                      : null,
-                  )
-                }
-                onBlur={() => setSocialFocused(null)}
-              >
-                <GithubIcon
-                  ref={(node) => (iconRefs.current["GitHub"] = node)}
-                  size={20}
-                />
-              </a>
-              <AnimatePresence>
-                {(socialHovered === "GitHub" ||
-                  socialFocused === "GitHub") && (
-                  <motion.div
-                    aria-hidden="true"
-                    style={{ x: "-50%" }}
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 4 }}
-                    transition={{ duration: 0.15, ease: "easeOut" }}
-                    className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1 font-mono text-[11px] font-medium text-canvas shadow-md dark:bg-ink-dark dark:text-canvas-dark"
-                  >
-                    GitHub
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+          {/* Social links */}
+          <motion.div
+            {...fade(0.86)}
+            className="mt-10 flex items-center justify-center gap-5"
+          >
+            {socialLinks.map(({ label, href, Icon }) => (
+              <SocialLink
+                key={label}
+                label={label}
+                href={href}
+                Icon={Icon}
+                hovered={socialHovered}
+                focused={socialFocused}
+                setHovered={setSocialHovered}
+                setFocused={setSocialFocused}
+              />
+            ))}
 
-            <div className="relative flex items-center">
-              <a
-                href="https://linkedin.com/in/rohankoriya"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className={socialLink}
-                onMouseEnter={() => {
-                  setSocialHovered("LinkedIn");
-                  iconRefs.current["LinkedIn"]?.startAnimation();
-                }}
-                onMouseLeave={() => {
-                  setSocialHovered(null);
-                  iconRefs.current["LinkedIn"]?.stopAnimation();
-                }}
-                onFocus={(event) =>
-                  setSocialFocused(
-                    event.currentTarget.matches(":focus-visible")
-                      ? "LinkedIn"
-                      : null,
-                  )
-                }
-                onBlur={() => setSocialFocused(null)}
-              >
-                <LinkedinIcon
-                  ref={(node) => (iconRefs.current["LinkedIn"] = node)}
-                  size={20}
-                />
-              </a>
-              <AnimatePresence>
-                {(socialHovered === "LinkedIn" ||
-                  socialFocused === "LinkedIn") && (
-                  <motion.div
-                    aria-hidden="true"
-                    style={{ x: "-50%" }}
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 4 }}
-                    transition={{ duration: 0.15, ease: "easeOut" }}
-                    className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1 font-mono text-[11px] font-medium text-canvas shadow-md dark:bg-ink-dark dark:text-canvas-dark"
-                  >
-                    LinkedIn
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="relative flex items-center">
+            {/* Email copy */}
+            <div className="relative flex items-center justify-center">
               <button
                 type="button"
                 onClick={handleCopyEmail}
                 aria-label="Copy email address"
-                className={`${socialLink} cursor-pointer`}
+                className={`${SOCIAL_CLASS} cursor-pointer`}
                 onMouseEnter={() => {
                   setEmailHovered(true);
-                  iconRefs.current["Email"]?.startAnimation();
+                  emailIconRef.current?.startAnimation();
                 }}
                 onMouseLeave={() => {
                   setEmailHovered(false);
-                  iconRefs.current["Email"]?.stopAnimation();
+                  emailIconRef.current?.stopAnimation();
                 }}
-                // Keyboard focus only: a mouse click also focuses the button,
-                // which would leave the tooltip stuck open after the pointer left.
                 onFocus={(event) =>
                   setEmailFocused(event.currentTarget.matches(":focus-visible"))
                 }
                 onBlur={() => setEmailFocused(false)}
               >
-                <GmailIcon
-                  ref={(node) => (iconRefs.current["Email"] = node)}
-                  size={20}
-                />
+                <GmailIcon ref={emailIconRef} size={19} />
               </button>
 
               <AnimatePresence>
-                {showTip && (
-                  <motion.div
+                {showEmailTip && (
+                  <motion.span
                     aria-hidden="true"
-                    // x lives in motion's own transform: a Tailwind
-                    // -translate-x-1/2 class would be overwritten by it.
                     style={{ x: "-50%" }}
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 4 }}
-                    transition={{ duration: 0.15, ease: "easeOut" }}
-                    className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1 font-mono text-[11px] font-medium text-canvas shadow-md dark:bg-ink-dark dark:text-canvas-dark"
+                    transition={{ duration: 0.15 }}
+                    className="
+                      pointer-events-none absolute bottom-full
+                      left-1/2 z-20 mb-2 whitespace-nowrap
+                      rounded-md bg-ink px-2.5 py-1
+                      font-mono text-[11px] font-medium
+                      text-canvas shadow-sm
+                      dark:bg-ink-dark dark:text-canvas-dark
+                    "
                   >
                     {emailCopied ? "✓ Copied" : EMAIL}
-                  </motion.div>
+                  </motion.span>
                 )}
               </AnimatePresence>
 
-              {/* Screen readers don't see the tooltip, so announce the copy */}
               <span role="status" className="sr-only">
                 {emailCopied ? "Email address copied to clipboard" : ""}
               </span>

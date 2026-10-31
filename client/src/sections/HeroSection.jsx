@@ -39,6 +39,8 @@ export default function HeroSection({ ready = true }) {
   const [emailCopied, setEmailCopied] = useState(false);
   const [emailHovered, setEmailHovered] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
+  const [socialHovered, setSocialHovered] = useState(null);
+  const [socialFocused, setSocialFocused] = useState(null);
   const [resumeDownloaded, setResumeDownloaded] = useState(false);
 
   useEffect(() => {
@@ -201,37 +203,99 @@ export default function HeroSection({ ready = true }) {
           </motion.div>
 
           <motion.div {...fade(0.9)} className="flex items-center gap-5 mt-12">
-            <a
-              href="https://github.com/rohankoriya"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              className={socialLink}
-              onMouseEnter={() => iconRefs.current["GitHub"]?.startAnimation()}
-              onMouseLeave={() => iconRefs.current["GitHub"]?.stopAnimation()}
-            >
-              <GithubIcon
-                ref={(node) => (iconRefs.current["GitHub"] = node)}
-                size={20}
-              />
-            </a>
+            <div className="relative flex items-center">
+              <a
+                href="https://github.com/rohankoriya"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className={socialLink}
+                onMouseEnter={() => {
+                  setSocialHovered("GitHub");
+                  iconRefs.current["GitHub"]?.startAnimation();
+                }}
+                onMouseLeave={() => {
+                  setSocialHovered(null);
+                  iconRefs.current["GitHub"]?.stopAnimation();
+                }}
+                onFocus={(event) =>
+                  setSocialFocused(
+                    event.currentTarget.matches(":focus-visible")
+                      ? "GitHub"
+                      : null,
+                  )
+                }
+                onBlur={() => setSocialFocused(null)}
+              >
+                <GithubIcon
+                  ref={(node) => (iconRefs.current["GitHub"] = node)}
+                  size={20}
+                />
+              </a>
+              <AnimatePresence>
+                {(socialHovered === "GitHub" ||
+                  socialFocused === "GitHub") && (
+                  <motion.div
+                    aria-hidden="true"
+                    style={{ x: "-50%" }}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 4 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1 font-mono text-[11px] font-medium text-canvas shadow-md dark:bg-ink-dark dark:text-canvas-dark"
+                  >
+                    GitHub
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-            <a
-              href="https://linkedin.com/in/rohankoriya"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className={socialLink}
-              onMouseEnter={() =>
-                iconRefs.current["LinkedIn"]?.startAnimation()
-              }
-              onMouseLeave={() => iconRefs.current["LinkedIn"]?.stopAnimation()}
-            >
-              <LinkedinIcon
-                ref={(node) => (iconRefs.current["LinkedIn"] = node)}
-                size={20}
-              />
-            </a>
+            <div className="relative flex items-center">
+              <a
+                href="https://linkedin.com/in/rohankoriya"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className={socialLink}
+                onMouseEnter={() => {
+                  setSocialHovered("LinkedIn");
+                  iconRefs.current["LinkedIn"]?.startAnimation();
+                }}
+                onMouseLeave={() => {
+                  setSocialHovered(null);
+                  iconRefs.current["LinkedIn"]?.stopAnimation();
+                }}
+                onFocus={(event) =>
+                  setSocialFocused(
+                    event.currentTarget.matches(":focus-visible")
+                      ? "LinkedIn"
+                      : null,
+                  )
+                }
+                onBlur={() => setSocialFocused(null)}
+              >
+                <LinkedinIcon
+                  ref={(node) => (iconRefs.current["LinkedIn"] = node)}
+                  size={20}
+                />
+              </a>
+              <AnimatePresence>
+                {(socialHovered === "LinkedIn" ||
+                  socialFocused === "LinkedIn") && (
+                  <motion.div
+                    aria-hidden="true"
+                    style={{ x: "-50%" }}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 4 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1 font-mono text-[11px] font-medium text-canvas shadow-md dark:bg-ink-dark dark:text-canvas-dark"
+                  >
+                    LinkedIn
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             <div className="relative flex items-center">
               <button

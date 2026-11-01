@@ -65,7 +65,7 @@ export default function ProjectCard({
                 alt={`${project.name} preview`}
                 loading="lazy"
                 decoding="async"
-                className="object-contain object-center w-full h-full"
+                className="object-cover object-center w-full h-full"
               />
             ) : (
               <div className="flex flex-col items-center justify-center w-full h-full gap-2 px-4">
@@ -294,7 +294,7 @@ export default function ProjectCard({
                   alt={`${project.name} preview`}
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-contain object-center transition-transform duration-700 group-hover:scale-[1.015]"
+                  className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.015]"
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center w-full h-full min-h-0 gap-2 px-4 bg-line/40 dark:bg-line-dark/40">

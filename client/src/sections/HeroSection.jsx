@@ -210,12 +210,12 @@ export default function HeroSection({ ready = true }) {
           {/* Main heading */}
           <h1
             className="
-    w-full max-w-full
-    text-[clamp(2.8rem,10.5vw,6.5rem)]
-    font-medium leading-[0.94]
-    tracking-[-0.065em]
-    text-ink dark:text-ink-dark
-  "
+              w-full max-w-full
+              text-[clamp(2.8rem,10.5vw,6.5rem)]
+              font-medium leading-[0.94]
+              tracking-[-0.065em]
+              text-ink dark:text-ink-dark
+            "
           >
             <span className="block overflow-hidden py-[0.12em]">
               <motion.span
@@ -270,21 +270,18 @@ export default function HeroSection({ ready = true }) {
             interfaces people use to the systems behind them.
           </motion.p>
 
-          {/* Action buttons */}
+          {/* Action button & Social links responsive layout */}
           <motion.div
             {...fade(0.72)}
-            className="flex flex-col items-center justify-center gap-3 mt-9 sm:flex-row"
+            className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 mt-9"
           >
-            <Button as="a" href="#work" className="w-48 sm:w-auto">
-              View my work
-            </Button>
-
+            {/* Primary Resume Download Button */}
             <Button
               as="a"
               href={RESUME_FILE}
               download
-              variant="secondary"
-              className="w-48 sm:w-auto"
+              variant="primary"
+              className="w-full sm:w-auto"
               onClick={() => setResumeDownloaded(true)}
               onMouseEnter={() => {
                 if (!resumeDownloaded) {
@@ -337,75 +334,73 @@ export default function HeroSection({ ready = true }) {
                 </motion.span>
               </AnimatePresence>
             </Button>
-          </motion.div>
 
-          {/* Social links */}
-          <motion.div
-            {...fade(0.86)}
-            className="flex items-center justify-center gap-5 mt-10"
-          >
-            {socialLinks.map(({ label, href, Icon }) => (
-              <SocialLink
-                key={label}
-                label={label}
-                href={href}
-                Icon={Icon}
-                hovered={socialHovered}
-                focused={socialFocused}
-                setHovered={setSocialHovered}
-                setFocused={setSocialFocused}
-              />
-            ))}
+            {/* Social links & Email copy */}
+            <div className="flex items-center justify-center gap-1 sm:gap-2">
+              {socialLinks.map(({ label, href, Icon }) => (
+                <SocialLink
+                  key={label}
+                  label={label}
+                  href={href}
+                  Icon={Icon}
+                  hovered={socialHovered}
+                  focused={socialFocused}
+                  setHovered={setSocialHovered}
+                  setFocused={setSocialFocused}
+                />
+              ))}
 
-            {/* Email copy */}
-            <div className="relative flex items-center justify-center">
-              <button
-                type="button"
-                onClick={handleCopyEmail}
-                aria-label="Copy email address"
-                className={`${SOCIAL_CLASS} cursor-pointer`}
-                onMouseEnter={() => {
-                  setEmailHovered(true);
-                  emailIconRef.current?.startAnimation();
-                }}
-                onMouseLeave={() => {
-                  setEmailHovered(false);
-                  emailIconRef.current?.stopAnimation();
-                }}
-                onFocus={(event) =>
-                  setEmailFocused(event.currentTarget.matches(":focus-visible"))
-                }
-                onBlur={() => setEmailFocused(false)}
-              >
-                <GmailIcon ref={emailIconRef} size={19} />
-              </button>
+              <div className="relative flex items-center justify-center">
+                <button
+                  type="button"
+                  onClick={handleCopyEmail}
+                  aria-label="Copy email address"
+                  className={`${SOCIAL_CLASS} cursor-pointer`}
+                  onMouseEnter={() => {
+                    setEmailHovered(true);
+                    emailIconRef.current?.startAnimation();
+                  }}
+                  onMouseLeave={() => {
+                    setEmailHovered(false);
+                    emailIconRef.current?.stopAnimation();
+                  }}
+                  onFocus={(event) =>
+                    setEmailFocused(
+                      event.currentTarget.matches(":focus-visible"),
+                    )
+                  }
+                  onBlur={() => setEmailFocused(false)}
+                >
+                  <GmailIcon ref={emailIconRef} size={19} />
+                </button>
 
-              <AnimatePresence>
-                {showEmailTip && (
-                  <motion.span
-                    aria-hidden="true"
-                    style={{ x: "-50%" }}
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 4 }}
-                    transition={{ duration: 0.15 }}
-                    className="
-                      pointer-events-none absolute bottom-full
-                      left-1/2 z-20 mb-2 whitespace-nowrap
-                      rounded-md bg-ink px-2.5 py-1
-                      font-mono text-[11px] font-medium
-                      text-canvas shadow-sm
-                      dark:bg-ink-dark dark:text-canvas-dark
-                    "
-                  >
-                    {emailCopied ? "✓ Copied" : EMAIL}
-                  </motion.span>
-                )}
-              </AnimatePresence>
+                <AnimatePresence>
+                  {showEmailTip && (
+                    <motion.span
+                      aria-hidden="true"
+                      style={{ x: "-50%" }}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 4 }}
+                      transition={{ duration: 0.15 }}
+                      className="
+                        pointer-events-none absolute bottom-full
+                        left-1/2 z-20 mb-2 whitespace-nowrap
+                        rounded-md bg-ink px-2.5 py-1
+                        font-mono text-[11px] font-medium
+                        text-canvas shadow-sm
+                        dark:bg-ink-dark dark:text-canvas-dark
+                      "
+                    >
+                      {emailCopied ? "✓ Copied" : EMAIL}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
 
-              <span role="status" className="sr-only">
-                {emailCopied ? "Email address copied to clipboard" : ""}
-              </span>
+                <span role="status" className="sr-only">
+                  {emailCopied ? "Email address copied to clipboard" : ""}
+                </span>
+              </div>
             </div>
           </motion.div>
         </div>

@@ -170,7 +170,7 @@ export default function HeroSection({ ready = true }) {
   return (
     <section
       id="top"
-      className="relative pt-32 pb-24 overflow-hidden sm:pb-28 sm:pt-40 md:pb-32 md:pt-44"
+      className="relative pt-32 pb-12 overflow-hidden sm:pb-14 sm:pt-32 md:pb-16 md:pt-36"
     >
       <div className="container-content">
         <div className="flex flex-col items-center max-w-3xl mx-auto text-center">

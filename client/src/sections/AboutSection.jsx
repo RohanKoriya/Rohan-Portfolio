@@ -37,7 +37,7 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="py-20 border-t border-dashed border-line dark:border-line-dark sm:py-24 md:py-28 lg:py-32"
+      className="pt-12 pb-20 border-t border-dashed border-line dark:border-line-dark sm:pt-14 md:pt-16 md:pb-24"
     >
       <div className="container-content">
         <div className="grid items-start grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">

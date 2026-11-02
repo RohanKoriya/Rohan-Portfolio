@@ -205,7 +205,7 @@ export default function ContactForm() {
         disabled={isSubmitting}
         onMouseEnter={() => sendRef.current?.startAnimation()}
         onMouseLeave={() => sendRef.current?.stopAnimation()}
-        className="inline-flex items-center self-start justify-center gap-2 px-6 py-3 mt-1 text-sm font-medium transition-opacity rounded-full bg-ink dark:bg-ink-dark text-canvas dark:text-canvas-dark hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex items-center self-start justify-center gap-2 px-6 py-3 mt-1 text-sm font-medium transition-opacity rounded-xl bg-ink dark:bg-ink-dark text-canvas dark:text-canvas-dark hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? (
           <>

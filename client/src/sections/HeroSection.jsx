@@ -243,14 +243,11 @@ export default function HeroSection({ ready = true }) {
               Full-Stack Developer
             </span>
 
-            <span className="hidden w-px h-4 bg-border dark:bg-border-dark sm:block" />
+            <span className="hidden font-mono select-none text-muted/40 dark:text-muted-dark/40 sm:block">
+              |
+            </span>
 
-            <span
-              className="
-                inline-flex items-center gap-1.5
-                text-sm text-muted dark:text-muted-dark
-              "
-            >
+            <span className="inline-flex items-center gap-1.5 text-sm text-muted dark:text-muted-dark">
               <MapPin size={14} strokeWidth={1.7} />
               Mumbai, India
             </span>

@@ -5,7 +5,7 @@ export default function ProjectsSection() {
   return (
     <section
       id="work"
-      className="py-24 border-t md:py-32 border-line dark:border-line-dark"
+      className="py-24 border-t border-dashed md:py-32 border-line dark:border-line-dark"
     >
       <div className="container-content">
         <motion.div

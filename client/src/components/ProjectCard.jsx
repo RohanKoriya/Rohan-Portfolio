@@ -56,7 +56,7 @@ export default function ProjectCard({
           {project.overview}
         </p>
 
-        {/* Keep the entire interface visible on both mobile and desktop. */}
+        {/* Mobile image wrapper */}
         <div className="relative mb-4 -mx-1 overflow-hidden border rounded-lg border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark">
           <div className="w-full aspect-video">
             {project.image ? (
@@ -199,7 +199,7 @@ export default function ProjectCard({
         )}
       </div>
 
-      {/* Desktop: existing two-column layout and full project details remain unchanged. */}
+      {/* Desktop: two-column layout where the right column fills the available height */}
       <div className="hidden grid-cols-1 items-stretch gap-6 md:grid md:grid-cols-[1.1fr_auto_1fr] md:gap-10">
         {/* Left column: project details */}
         <div className="flex flex-col justify-between min-w-0">
@@ -284,10 +284,10 @@ export default function ProjectCard({
         {/* Desktop divider */}
         <div className="hidden w-px my-1 bg-line dark:bg-line-dark md:block" />
 
-        {/* Preview and tech stack */}
-        <div className="flex flex-col justify-between min-w-0 gap-5 md:gap-6">
-          <div className="relative group">
-            <div className="relative w-full overflow-hidden border rounded-lg aspect-video border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark md:aspect-auto md:h-56">
+        {/* Preview and tech stack - image wrapper uses flex-1 to fill the vertical space */}
+        <div className="flex flex-col justify-between h-full min-w-0 gap-4 md:gap-5">
+          <div className="relative flex-1 group">
+            <div className="relative w-full h-full overflow-hidden border rounded-lg border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark min-h-[200px]">
               {project.image ? (
                 <img
                   src={project.image}
@@ -310,7 +310,7 @@ export default function ProjectCard({
           </div>
 
           {project.stack?.length > 0 && (
-            <div className="pt-2 md:pt-4">
+            <div className="pt-1">
               <span className="eyebrow mb-2.5 block">Tech stack</span>
               <div className="flex flex-wrap gap-2">
                 {project.stack.map((tech) => (

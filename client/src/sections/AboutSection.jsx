@@ -56,7 +56,7 @@ export default function AboutSection() {
             <motion.div variants={reveal} className="w-full mt-6">
               <ScrollHighlightBlock
                 headline="I like building things and figuring out how they work."
-                body="I recently graduated with a B.Sc. in Information Technology from Mumbai University, and most of my learning has come from building projects. I enjoy taking an idea, working through the challenges, and turning it into something people can actually use. Projects like Ranklytics, LeadFlow, and ChatSphere have helped me learn a lot along the way. I'm still exploring, experimenting, and figuring out what I want to build next."
+                body="I recently graduated with a B.Sc. in Information Technology from Mumbai University, and most of my learning has come from building projects. I enjoy taking an idea, working through the challenges, and turning it into something people can actually use. Projects like Ranklytics, LeadFlow, and ChatSphere have helped me learn a lot along the way."
               />
             </motion.div>
           </motion.div>

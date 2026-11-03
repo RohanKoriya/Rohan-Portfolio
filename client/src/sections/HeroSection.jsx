@@ -263,8 +263,8 @@ export default function HeroSection({ ready = true }) {
               sm:text-base
             "
           >
-            I build web applications with React, Node.js, and MongoDB — from the
-            interfaces people use to the systems behind them.
+            I enjoy taking an idea, figuring out how to bring it to life, and
+            building something useful from it.
           </motion.p>
 
           {/* Action button & Social links responsive layout */}

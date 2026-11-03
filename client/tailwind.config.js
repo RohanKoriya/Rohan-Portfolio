@@ -22,7 +22,7 @@ export default {
           dark: "#9E9EA6",
         },
         line: {
-          DEFAULT: "#E2E2E7",
+          DEFAULT: "#DEDEE3",
           dark: "#26262B",
         },
         accent: {

@@ -134,12 +134,14 @@ textarea:focus-visible,
   position: absolute;
   top: 12px;
   right: 40px;
+  z-index: 2;
+
   display: flex;
   align-items: center;
   gap: 12px;
-  z-index: 2;
 }
 
+/* Remove unwanted canvas and game container styling */
 .dino-game,
 .dino-game__canvas {
   outline: none !important;
@@ -154,33 +156,88 @@ textarea:focus-visible,
   box-shadow: none !important;
 }
 
+/* Minimal Play Dino action */
 .dino-game__play {
-  padding: 2px 0;
-  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 4px 0;
+  border: none;
+  border-radius: 0;
   background: transparent;
-  color: #999;
-  font-family: monospace;
-  font-size: 10px;
-  letter-spacing: 0.025em;
+
+  color: #929292;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+
   white-space: nowrap;
   cursor: pointer;
+
   transition: color 180ms ease;
 }
 
-.dino-game__play:hover {
-  color: #dedede;
+/* Play icon */
+.dino-game__play-icon {
+  display: grid;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  place-items: center;
+
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+
+  font-size: 10px;
+
+  transition: transform 180ms ease;
 }
 
+/* Hover */
+.dino-game__play:hover {
+  color: #333333;
+}
+
+.dino-game__play:hover .dino-game__play-icon {
+  transform: translateX(2px);
+}
+
+/* Active */
+.dino-game__play:active {
+  opacity: 0.7;
+}
+
+/* Keyboard focus */
 .dino-game__play:focus-visible {
-  outline: 1px dashed currentColor;
+  outline: 2px solid currentColor;
   outline-offset: 4px;
 }
 
+/* Dark theme */
+.dark .dino-game__play {
+  color: #929292;
+}
+
+.dark .dino-game__play:hover {
+  color: #dedede;
+}
+
+.dark .dino-game__result,
+.dark .dino-game__hint {
+  color: #929292;
+}
+
+/* Score and keyboard hint */
 .dino-game__result,
 .dino-game__hint {
-  color: #777;
+  color: #777777;
   font-family: monospace;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
@@ -219,17 +276,19 @@ textarea:focus-visible,
   }
 
   .dino-game__hint {
+    display: none;
     top: 30px;
     left: auto;
     right: 16px;
     transform: none;
     font-size: 8px;
-    display: none;
   }
 }
 
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .dino-game__play {
+  .dino-game__play,
+  .dino-game__play-icon {
     transition: none;
   }
 }

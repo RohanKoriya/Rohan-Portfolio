@@ -362,8 +362,11 @@ export default function DinoGame() {
             onClick={handleStart}
             className="dino-game__play"
           >
-            {mode === "idle" ? "Play Dino" : "Play again"}
-            <span aria-hidden="true"> ↗</span>
+            <span className="dino-game__play-icon" aria-hidden="true">
+              ▶
+            </span>
+
+            <span>{mode === "idle" ? "Play Dino" : "Play again"}</span>
           </button>
 
           {mode === "over" && (

@@ -201,7 +201,7 @@ export default function HeroSection({ ready = true }) {
                 </span>
               </span>
 
-              <span className="text-border dark:text-border-dark">/</span>
+              <span className="text-border dark:text-border-dark">|</span>
 
               <span className="whitespace-nowrap">{mumbaiTime} IST</span>
             </div>

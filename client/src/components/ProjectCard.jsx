@@ -57,7 +57,7 @@ export default function ProjectCard({
         </p>
 
         {/* Mobile image wrapper */}
-        <div className="relative mb-4 -mx-1 overflow-hidden border rounded-lg border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark">
+        <div className="relative mb-4 -mx-1 overflow-hidden border rounded-xl border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark">
           <div className="w-full aspect-video">
             {project.image ? (
               <img
@@ -287,7 +287,7 @@ export default function ProjectCard({
         {/* Preview and tech stack - image wrapper uses flex-1 to fill the vertical space */}
         <div className="flex flex-col justify-between h-full min-w-0 gap-4 md:gap-5">
           <div className="relative flex-1 group">
-            <div className="relative w-full h-full overflow-hidden border rounded-lg border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark min-h-[200px]">
+            <div className="relative w-full h-full overflow-hidden border rounded-xl border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark min-h-[200px]">
               {project.image ? (
                 <img
                   src={project.image}

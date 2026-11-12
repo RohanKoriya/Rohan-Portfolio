@@ -45,20 +45,6 @@ const TOTAL_SKILLS = skillGroups.reduce(
   0,
 );
 
-// function SkillPill({ skill }) {
-//   const Icon = ICONS[skill.icon] ?? Code2;
-//   return (
-//     <span className="group inline-flex items-center gap-2 rounded-xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark px-3.5 py-2 text-sm text-ink dark:text-ink-dark transition-colors duration-200 hover:border-accent/40 dark:hover:border-accent-dark/40">
-//       <Icon
-//         size={15}
-//         strokeWidth={1.75}
-//         className="transition-colors duration-200 text-muted dark:text-muted-dark group-hover:text-accent dark:group-hover:text-accent-dark"
-//       />
-//       {skill.name}
-//     </span>
-//   );
-// }
-
 function SkillPill({ skill }) {
   const Icon = ICONS[skill.icon] ?? Code2;
   return (

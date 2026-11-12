@@ -92,11 +92,16 @@ export default function ProjectStack() {
 
   return (
     <>
-      <div
+      {/* <div
         className="relative hidden md:block"
         style={{
           height: `${projects.length * 62}vh`,
         }}
+      > */}
+
+      <div
+        className="relative hidden md:block"
+        style={{ paddingBottom: "1vh" }}
       >
         {projects.map((project, index) => (
           <StackedCard
@@ -122,3 +127,17 @@ export default function ProjectStack() {
     </>
   );
 }
+
+// import { projects } from "../data/projects.js";
+// import ProjectCard from "./ProjectCard.jsx";
+
+// /* Simple responsive grid: 1 column on mobile, 2 from tablet up */
+// export default function ProjectStack() {
+//   return (
+//     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+//       {projects.map((project, index) => (
+//         <ProjectCard key={project.id} project={project} index={index} />
+//       ))}
+//     </div>
+//   );
+// }

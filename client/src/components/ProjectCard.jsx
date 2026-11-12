@@ -324,3 +324,121 @@ export default function ProjectCard({
     </motion.article>
   );
 }
+
+// import { useRef } from "react";
+// import Badge from "./ui/Badge.jsx";
+// import { GithubIcon, LinkIcon } from "./ui/AnimatedIcons.jsx";
+
+// const MAX_STACK = 4;
+
+// const iconButton =
+//   "inline-flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-line/50 hover:text-ink dark:text-muted-dark dark:hover:bg-line-dark/60 dark:hover:text-ink-dark";
+
+// export default function ProjectCard({ project }) {
+//   const githubRef = useRef(null);
+//   const demoRef = useRef(null);
+
+//   const stack = project.stack ?? [];
+//   const visibleStack = stack.slice(0, MAX_STACK);
+//   const hiddenCount = stack.length - visibleStack.length;
+//   const isLive = Boolean(project.links?.demo);
+
+//   return (
+//     <article className="flex h-full flex-col border border-dashed border-line bg-canvas p-3.5 dark:border-line-dark dark:bg-canvas-dark sm:p-4">
+//       {/* Screenshot */}
+//       <div className="overflow-hidden border rounded-lg border-line bg-line/40 dark:border-line-dark dark:bg-line-dark/40">
+//         <div className="w-full aspect-video">
+//           {project.image ? (
+//             <img
+//               src={project.image}
+//               alt={`${project.name} preview`}
+//               loading="lazy"
+//               decoding="async"
+//               className="object-cover object-center w-full h-full"
+//             />
+//           ) : (
+//             <div className="flex items-center justify-center w-full h-full text-sm text-muted dark:text-muted-dark">
+//               Preview coming soon
+//             </div>
+//           )}
+//         </div>
+//       </div>
+
+//       {/* Title + status */}
+//       <div className="flex items-start justify-between gap-4 mt-4">
+//         <div className="min-w-0">
+//           <h3 className="text-xl font-medium tracking-tight">{project.name}</h3>
+//           {project.category && (
+//             <p className="mt-0.5 text-sm text-muted dark:text-muted-dark">
+//               {project.category}
+//             </p>
+//           )}
+//         </div>
+
+//         {isLive && (
+//           <span className="inline-flex items-center gap-2 mt-1 text-sm shrink-0 text-muted dark:text-muted-dark">
+//             <span className="w-2 h-2 rounded-full bg-signal dark:bg-accent-dark" />
+//             Live
+//           </span>
+//         )}
+//       </div>
+
+//       {/* Description */}
+//       <p className="mt-4 text-sm leading-6 text-muted dark:text-muted-dark">
+//         {project.overview}
+//       </p>
+
+//       {/* Footer: stack on the left, links on the right */}
+//       <div className="flex items-center justify-between gap-4 pt-5 mt-auto">
+//         {stack.length > 0 ? (
+//           <ul className="flex flex-wrap gap-2" aria-label="Tech stack">
+//             {visibleStack.map((tech) => (
+//               <li key={tech}>
+//                 <Badge>{tech}</Badge>
+//               </li>
+//             ))}
+//             {hiddenCount > 0 && (
+//               <li>
+//                 <Badge>+{hiddenCount}</Badge>
+//               </li>
+//             )}
+//           </ul>
+//         ) : (
+//           <span aria-hidden="true" />
+//         )}
+
+//         <div className="flex items-center gap-1 shrink-0">
+//           {project.links?.demo && (
+//             <a
+//               href={project.links.demo}
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               data-cursor="link"
+//               aria-label={`${project.name} live demo`}
+//               className={iconButton}
+//               onMouseEnter={() => demoRef.current?.startAnimation()}
+//               onMouseLeave={() => demoRef.current?.stopAnimation()}
+//             >
+//               <LinkIcon ref={demoRef} size={18} />
+//             </a>
+//           )}
+
+//           {project.links?.github && (
+//             <a
+//               href={project.links.github}
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               data-cursor="link"
+//               aria-label={`${project.name} on GitHub`}
+//               className={iconButton}
+//               onMouseEnter={() => githubRef.current?.startAnimation()}
+//               onMouseLeave={() => githubRef.current?.stopAnimation()}
+//             >
+//               <GithubIcon ref={githubRef} size={18} />
+//             </a>
+//           )}
+//         </div>
+//       </div>
+//     </article>
+//   );
+// }

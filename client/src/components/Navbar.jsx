@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Menu, X, Check } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 import ThemeToggle from "./ui/ThemeToggle.jsx";
-import Button from "./ui/Button.jsx";
 
-import { DownloadIcon, LetterRIcon } from "./ui/AnimatedIcons.jsx";
+import { LetterRIcon } from "./ui/AnimatedIcons.jsx";
 
-import { RESUME_FILE } from "../data/Site.js";
 import { useActiveSection } from "../hooks/useActiveSection.js";
 
 const NAV_LINKS = [
@@ -21,37 +19,11 @@ const SECTION_IDS = NAV_LINKS.map((link) => link.href.replace("#", ""));
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [resumeDownloaded, setResumeDownloaded] = useState(false);
 
   const menuContainerRef = useRef(null);
   const monogramRef = useRef(null);
-  const downloadRef = useRef(null);
-  const downloadTimeoutRef = useRef(null);
 
   const activeSection = useActiveSection(SECTION_IDS);
-
-  // Resume download feedback
-  const handleResumeDownload = () => {
-    if (downloadTimeoutRef.current) {
-      window.clearTimeout(downloadTimeoutRef.current);
-    }
-
-    setResumeDownloaded(true);
-
-    downloadTimeoutRef.current = window.setTimeout(() => {
-      setResumeDownloaded(false);
-      downloadTimeoutRef.current = null;
-    }, 2500);
-  };
-
-  // Clean up download timer
-  useEffect(() => {
-    return () => {
-      if (downloadTimeoutRef.current) {
-        window.clearTimeout(downloadTimeoutRef.current);
-      }
-    };
-  }, []);
 
   // Close menu if viewport resizes to desktop
   useEffect(() => {
@@ -162,7 +134,7 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Desktop actions */}
+        {/* Desktop actions (Theme Toggle only) */}
         <div
           className="
             hidden items-center justify-self-end
@@ -170,57 +142,6 @@ export default function Navbar() {
           "
         >
           <ThemeToggle />
-
-          <Button
-            as="a"
-            href={RESUME_FILE}
-            download
-            variant="primary"
-            className="
-              !rounded-lg !px-4 !py-2
-              text-xs font-medium
-            "
-            onClick={handleResumeDownload}
-            onMouseEnter={() => {
-              if (!resumeDownloaded) {
-                downloadRef.current?.startAnimation();
-              }
-            }}
-            onMouseLeave={() => downloadRef.current?.stopAnimation()}
-          >
-            <span className="relative inline-grid w-4 h-4 shrink-0 place-items-center">
-              <AnimatePresence mode="wait" initial={false}>
-                {resumeDownloaded ? (
-                  <motion.span
-                    key="success"
-                    initial={{ opacity: 0, scale: 0.5, y: 3 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.7, y: -2 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 450,
-                      damping: 20,
-                    }}
-                    className="absolute inset-0 grid place-items-center text-signal"
-                  >
-                    <Check size={16} strokeWidth={3} />
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="download"
-                    initial={{ opacity: 0, scale: 0.7, y: -3 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.6, y: -3 }}
-                    transition={{ duration: 0.18 }}
-                    className="absolute inset-0 grid place-items-center"
-                  >
-                    <DownloadIcon ref={downloadRef} size={15} />
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </span>
-            Resume
-          </Button>
         </div>
 
         {/* Mobile controls + Floating Popover Menu */}
@@ -282,12 +203,12 @@ export default function Navbar() {
                 }}
                 style={{ transformOrigin: "top right" }}
                 className="
-        absolute right-0 top-[calc(100%+10px)] z-50
-        w-56 overflow-hidden rounded-2xl
-        border border-line bg-canvas p-2
-        shadow-xl
-        dark:border-line-dark dark:bg-canvas-dark
-      "
+                  absolute right-0 top-[calc(100%+10px)] z-50
+                  w-56 overflow-hidden rounded-2xl
+                  border border-line bg-canvas p-2
+                  shadow-xl
+                  dark:border-line-dark dark:bg-canvas-dark
+                "
               >
                 <nav className="flex flex-col gap-0.5">
                   {NAV_LINKS.map((link) => {
@@ -316,33 +237,6 @@ export default function Navbar() {
                     );
                   })}
                 </nav>
-
-                <div className="my-2 border-t border-line/70 dark:border-line-dark/70" />
-
-                <Button
-                  as="a"
-                  href={RESUME_FILE}
-                  download
-                  variant="primary"
-                  className="
-                    !min-h-9 w-full justify-center
-                    !rounded-xl !px-3 !py-2
-                    text-xs font-medium
-                  "
-                  onClick={() => {
-                    handleResumeDownload();
-                    setOpen(false);
-                  }}
-                >
-                  <span className="inline-grid w-3.5 h-3.5 shrink-0 place-items-center mr-1.5">
-                    {resumeDownloaded ? (
-                      <Check size={14} strokeWidth={2.5} />
-                    ) : (
-                      <DownloadIcon size={14} />
-                    )}
-                  </span>
-                  Download Resume
-                </Button>
               </motion.div>
             )}
           </AnimatePresence>

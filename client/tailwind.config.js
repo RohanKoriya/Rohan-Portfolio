@@ -10,8 +10,8 @@ export default {
           dark: "#0A0A0B",
         },
         surface: {
-          DEFAULT: "#F5F5F7", // Upgraded pure card base for light mode to look premium and crisp
-          dark: "#121215",    // Rich matte charcoal for dark mode
+          DEFAULT: "#FAFAFA", // Upgraded pure card base for light mode to look premium and crisp
+          dark: "#0A0A0B",    // Rich matte charcoal for dark mode
         },
         ink: {
           DEFAULT: "#111215",

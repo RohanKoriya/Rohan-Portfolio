@@ -45,14 +45,28 @@ const TOTAL_SKILLS = skillGroups.reduce(
   0,
 );
 
+// function SkillPill({ skill }) {
+//   const Icon = ICONS[skill.icon] ?? Code2;
+//   return (
+//     <span className="group inline-flex items-center gap-2 rounded-xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark px-3.5 py-2 text-sm text-ink dark:text-ink-dark transition-colors duration-200 hover:border-accent/40 dark:hover:border-accent-dark/40">
+//       <Icon
+//         size={15}
+//         strokeWidth={1.75}
+//         className="transition-colors duration-200 text-muted dark:text-muted-dark group-hover:text-accent dark:group-hover:text-accent-dark"
+//       />
+//       {skill.name}
+//     </span>
+//   );
+// }
+
 function SkillPill({ skill }) {
   const Icon = ICONS[skill.icon] ?? Code2;
   return (
-    <span className="group inline-flex items-center gap-2 rounded-xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark px-3.5 py-2 text-sm text-ink dark:text-ink-dark transition-colors duration-200 hover:border-accent/40 dark:hover:border-accent-dark/40">
+    <span className="group inline-flex items-center gap-2 rounded-xl border border-zinc-200/80 border-b-zinc-300/90 dark:border-white/[0.08] dark:border-t-white/[0.14] bg-gradient-to-b from-white via-white to-zinc-100/70 dark:from-white/[0.06] dark:to-white/[0.015] px-3.5 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-200 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_1px_1px_rgba(0,0,0,0.03),inset_0_1px_0_0_#FFFFFF] dark:shadow-[0_2px_6px_rgba(0,0,0,0.4),inset_0_1px_0_0_rgba(255,255,255,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50 dark:hover:border-accent-dark/40 hover:from-white hover:to-zinc-50 dark:hover:from-white/[0.09] dark:hover:to-white/[0.025] hover:shadow-[0_6px_14px_rgba(0,0,0,0.07),0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_0_#FFFFFF] dark:hover:shadow-[0_4px_12px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.12)]">
       <Icon
         size={15}
         strokeWidth={1.75}
-        className="transition-colors duration-200 text-muted dark:text-muted-dark group-hover:text-accent dark:group-hover:text-accent-dark"
+        className="transition-colors duration-200 text-zinc-500 dark:text-zinc-400 group-hover:text-accent dark:group-hover:text-accent-dark"
       />
       {skill.name}
     </span>

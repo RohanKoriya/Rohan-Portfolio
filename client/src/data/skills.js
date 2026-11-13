@@ -26,7 +26,6 @@ export const skillGroups = [
     key: "database-devops",
     skills: [
       { name: "MongoDB", icon: "Database" },
-      { name: "Mongoose", icon: "Link2" },
       { name: "MySQL", icon: "Table2" },
       { name: "PostgreSQL", icon: "Table2" },
       { name: "Redis", icon: "Database" },

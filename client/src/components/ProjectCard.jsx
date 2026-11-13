@@ -93,20 +93,7 @@ export default function ProjectCard({ project, featured = false }) {
           {project.overview}
         </p>
 
-        {/* Technical highlights - featured project only */}
-        {featured && project.highlights?.length > 0 && (
-          <ul className="mt-5 space-y-2.5">
-            {project.highlights.map((point) => (
-              <li
-                key={point}
-                className="flex gap-2.5 text-sm leading-6 text-ink/80 dark:text-ink-dark/80"
-              >
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-muted dark:bg-muted-dark" />
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        
 
         {/* Footer: stack on the left, links on the right */}
         <div className="flex items-center justify-between gap-4 pt-5 mt-auto">

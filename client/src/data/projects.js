@@ -10,9 +10,7 @@ export const projects = [
       "SEO analytics platform that analyzes 20+ technical factors, identifies issues, and uses AI to suggest improvements in a detailed audit report.",
     highlights: [
       "Keyword tracking with historical ranking changes",
-      "JWT-protected routes with per-user audit history",
-      "Asynchronous processing for long-running SEO crawls",
-      "One-click PDF export for audit reports",
+
     ],
     links: {
       github: "https://github.com/RohanKoriya/Ranklytics-AI-Powered-SEO-Analytics-Platform",
@@ -45,7 +43,7 @@ export const projects = [
     image: "/images/Chatsphere-img.png",
     featured: false,
     category: "Real-Time Messaging App",
-    stack: ["React", "Node.js", "Express", "MongoDB", "Socket.IO", "Cloudinary"],
+    stack: ["React", "Node.js", "Socket.IO", "Express", "MongoDB", "Cloudinary"],
     overview:
       "A real-time chat application with messaging, media sharing, online presence, and conversation updates.",
     highlights: [
@@ -59,23 +57,5 @@ export const projects = [
       demo: "https://chatsphere-s8lq.onrender.com/login",
     },
   },
-  {
-    id: "ai-resume-analyzer",
-    name: "AI Resume Analyzer",
-    image: "/images/airesume-img.png",
-    featured: false,
-    category: "AI Resume Analysis",
-    stack: ["React", "JavaScript", "Puter.js"],
-    overview:
-      "A web app that analyzes resumes for ATS-friendly structure and provides AI-powered suggestions for improvement.",
-    highlights: [
-      "Client-side resume analysis with Puter.js",
-      "ATS-focused feedback across multiple categories",
-      "Interactive score breakdown and improvement suggestions",
-    ],
-    links: {
-      github: "https://github.com/rohankoriya/ai-resume-analyzer",
-      demo: "https://ai-resume-analyzer-blond-eight.vercel.app/",
-    },
-  },
+
 ];

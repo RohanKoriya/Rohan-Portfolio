@@ -14,6 +14,7 @@ import AboutSection from "./sections/AboutSection.jsx";
 import SkillsSection from "./sections/SkillsSection.jsx";
 import ProjectsSection from "./sections/ProjectsSection.jsx";
 import ContactSection from "./sections/ContactSection.jsx";
+import ProgressiveBlur from "./components/ui/ProgressiveBlur.jsx";
 
 const STATUS_MESSAGES = [
   "Initializing system",
@@ -179,6 +180,7 @@ export default function App() {
           </main>
           <Footer />
         </div>
+        <ProgressiveBlur />
       </div>
     </ThemeProvider>
   );

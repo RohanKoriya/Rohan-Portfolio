@@ -1,444 +1,212 @@
-import { useId, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useRef, useState } from "react";
 import Badge from "./ui/Badge.jsx";
 import { GithubIcon, LinkIcon } from "./ui/AnimatedIcons.jsx";
 
-export default function ProjectCard({
-  project,
-  index = 0,
-  style,
-  sticky = false,
-}) {
-  // Desktop icons retain their hover animations. Mobile icons are static because
-  // touch devices do not need a second set of animation refs.
+const MAX_STACK = 3;
+const MAX_STACK_FEATURED = 6;
+
+const iconButton =
+  "relative inline-flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-line/50 hover:text-ink dark:text-muted-dark dark:hover:bg-line-dark/60 dark:hover:text-ink-dark";
+
+export default function ProjectCard({ project, featured = false }) {
   const githubRef = useRef(null);
   const demoRef = useRef(null);
-  const [detailsOpen, setDetailsOpen] = useState(false);
-  const detailsId = useId();
-  const reduceMotion = useReducedMotion();
-  const formattedIndex = String(index + 1).padStart(2, "0");
+  const [showTooltip, setShowTooltip] = useState(false);
 
-  const accordionTransition = reduceMotion
-    ? { duration: 0 }
-    : {
-        height: { duration: 0.32, ease: [0.22, 1, 0.36, 1] },
-        opacity: { duration: 0.22, ease: "easeOut" },
-      };
+  const [activeTooltip, setActiveTooltip] = useState(null); // "demo" | "github" | null
+
+  const stack = project.stack ?? [];
+  const visibleStack = stack.slice(
+    0,
+    featured ? MAX_STACK_FEATURED : MAX_STACK,
+  );
+  const hiddenStack = stack.slice(featured ? MAX_STACK_FEATURED : MAX_STACK);
+  const hiddenCount = hiddenStack.length;
+  const isLive = Boolean(project.links?.demo);
 
   return (
-    <motion.article
-      style={style}
-      className={`${
-        sticky ? "sticky top-24" : ""
-      } mb-2 rounded-xl border border-line bg-surface p-4 shadow-[0_12px_30px_-24px_rgba(0,0,0,0.10)] transition-shadow duration-300 dark:border-line-dark dark:bg-surface-dark dark:shadow-[0_12px_32px_-24px_rgba(0,0,0,0.35)] sm:rounded-xl sm:p-5 md:rounded-xl md:p-10`}
+    <article
+      className={`flex h-full flex-col border border-dashed border-line bg-canvas p-3.5 dark:border-line-dark dark:bg-canvas-dark sm:p-4 ${
+        featured
+          ? "md:grid md:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] md:gap-8 md:p-5"
+          : ""
+      }`}
     >
-      {/* Mobile: show the essentials first and reveal technical details on demand. */}
-      <div className="md:hidden">
-        <div className="flex flex-wrap items-center mb-3 gap-x-3 gap-y-2">
-          <span className="font-mono text-xs font-light shrink-0 text-muted/60 dark:text-muted-dark/60">
-            {formattedIndex}
-          </span>
-          <span className="shrink-0 text-line dark:text-line-dark">—</span>
-          <span className="flex-1 min-w-0 eyebrow">{project.category}</span>
-          {project.featured && (
-            <span className="flex shrink-0 items-center gap-1.5 text-[11px] font-medium text-signal dark:text-accent-dark">
-              <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-dot" />
-              Featured
+      {/* Screenshot */}
+      <div className="overflow-hidden border rounded-lg border-line bg-line/40 dark:border-line-dark dark:bg-line-dark/40">
+        <div className="w-full aspect-video">
+          {project.image ? (
+            <img
+              src={project.image}
+              alt={`${project.name} preview`}
+              loading="lazy"
+              decoding="async"
+              className="object-cover object-center w-full h-full"
+            />
+          ) : (
+            <div className="flex items-center justify-center w-full h-full text-sm text-muted dark:text-muted-dark">
+              Preview coming soon
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div
+        className={`mt-4 flex min-w-0 flex-1 flex-col ${
+          featured ? "md:mt-0 md:py-1" : ""
+        }`}
+      >
+        {/* Title + status */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h3
+              className={`font-medium tracking-tight ${
+                featured ? "text-xl md:text-3xl" : "text-xl"
+              }`}
+            >
+              {project.name}
+            </h3>
+            {project.category && (
+              <p className="mt-0.5 text-sm text-muted dark:text-muted-dark">
+                {project.category}
+              </p>
+            )}
+          </div>
+
+          {isLive && (
+            <span className="inline-flex items-center gap-2 mt-1 text-sm shrink-0 text-muted dark:text-muted-dark">
+              <span className="w-2 h-2 rounded-full bg-signal dark:bg-accent-dark" />
+              Live
             </span>
           )}
         </div>
 
-        <h3 className="mb-2 text-2xl font-medium tracking-tight">
-          {project.name}
-        </h3>
-
-        <p className="mb-4 text-[14px] leading-6 text-muted dark:text-muted-dark">
+        {/* Description */}
+        <p
+          className={`mt-4 text-muted dark:text-muted-dark ${
+            featured
+              ? "text-sm leading-6 md:text-base md:leading-7"
+              : "text-sm leading-6"
+          }`}
+        >
           {project.overview}
         </p>
 
-        {/* Mobile image wrapper */}
-        <div className="relative mb-4 -mx-1 overflow-hidden border rounded-xl border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark">
-          <div className="w-full aspect-video">
-            {project.image ? (
-              <img
-                src={project.image}
-                alt={`${project.name} preview`}
-                loading="lazy"
-                decoding="async"
-                className="object-cover object-center w-full h-full"
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center w-full h-full gap-2 px-4">
-                <span className="eyebrow text-muted dark:text-muted-dark">
-                  {project.name}
-                </span>
-                <span className="text-center text-[11px] text-muted/70 dark:text-muted-dark/70">
-                  Preview coming soon
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Technical highlights - featured project only */}
+        {featured && project.highlights?.length > 0 && (
+          <ul className="mt-5 space-y-2.5">
+            {project.highlights.map((point) => (
+              <li
+                key={point}
+                className="flex gap-2.5 text-sm leading-6 text-ink/80 dark:text-ink-dark/80"
+              >
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-muted dark:bg-muted-dark" />
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
+        )}
 
-        {/* Keep project links visible without opening the accordion. */}
-        <div className="flex items-center justify-between gap-3 pt-3 border-t border-line dark:border-line-dark">
-          {project.links?.github ? (
-            <a
-              href={project.links.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="link"
-              className="inline-flex items-center gap-2 text-sm font-medium transition-colors min-h-9 text-muted hover:text-ink dark:text-muted-dark dark:hover:text-ink-dark"
+        {/* Footer: stack on the left, links on the right */}
+        <div className="flex items-center justify-between gap-4 pt-5 mt-auto">
+          {stack.length > 0 ? (
+            <ul
+              className="flex flex-wrap items-center gap-2"
+              aria-label="Tech stack"
             >
-              <GithubIcon size={17} />
-              GitHub
-            </a>
+              {visibleStack.map((tech) => (
+                <li key={tech}>
+                  <Badge>{tech}</Badge>
+                </li>
+              ))}
+              {hiddenCount > 0 && (
+                <li className="relative">
+                  <div
+                    onMouseEnter={() => setShowTooltip(true)}
+                    onMouseLeave={() => setShowTooltip(false)}
+                    className="inline-block cursor-pointer"
+                  >
+                    <Badge>+{hiddenCount}</Badge>
+                  </div>
+
+                  {/* Hover Popover */}
+                  {showTooltip && (
+                    <div className="absolute bottom-full left-0 mb-2 z-20 flex flex-wrap gap-1.5 p-2.5 rounded-xl border border-line bg-canvas shadow-xl w-48 dark:border-line-dark dark:bg-canvas-dark">
+                      {hiddenStack.map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-0.5 text-xs font-medium rounded-md bg-surface text-ink border border-line/60 dark:bg-surface-dark dark:text-ink-dark dark:border-line-dark/60"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </li>
+              )}
+            </ul>
           ) : (
             <span aria-hidden="true" />
           )}
 
-          {project.links?.demo && (
-            <a
-              href={project.links.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="link"
-              className="inline-flex items-center gap-2 px-2 py-1 text-sm font-medium transition-colors rounded-full min-h-9 text-signal hover:bg-signal/10 dark:text-accent-dark dark:hover:bg-accent-dark/10"
-            >
-              <LinkIcon size={15} />
-              Live demo
-            </a>
-          )}
-        </div>
-
-        {/* Animated, accessible mobile accordion. */}
-        {(project.highlights?.length > 0 || project.stack?.length > 0) && (
-          <div className="mt-2 border-t border-line dark:border-line-dark">
-            <button
-              type="button"
-              aria-expanded={detailsOpen}
-              aria-controls={detailsId}
-              onClick={() => setDetailsOpen((open) => !open)}
-              className="flex items-center justify-between w-full gap-3 py-3 text-sm font-medium text-left outline-none cursor-pointer min-h-12 text-ink focus-visible:ring-2 focus-visible:ring-ink/40 dark:text-ink-dark dark:focus-visible:ring-ink-dark/40"
-            >
-              <span>
-                {detailsOpen ? "Hide project details" : "View project details"}
-              </span>
-
-              <span
-                aria-hidden="true"
-                className="relative inline-flex items-center justify-center w-5 h-5 text-lg font-normal leading-none shrink-0 text-muted dark:text-muted-dark"
-              >
-                <motion.span
-                  initial={false}
-                  animate={{
-                    opacity: detailsOpen ? 0 : 1,
-                    scale: detailsOpen ? 0.75 : 1,
-                  }}
-                  transition={{ duration: reduceMotion ? 0 : 0.18 }}
-                  className="absolute"
-                >
-                  +
-                </motion.span>
-                <motion.span
-                  initial={false}
-                  animate={{
-                    opacity: detailsOpen ? 1 : 0,
-                    scale: detailsOpen ? 1 : 0.75,
-                  }}
-                  transition={{ duration: reduceMotion ? 0 : 0.18 }}
-                  className="absolute"
-                >
-                  −
-                </motion.span>
-              </span>
-            </button>
-
-            <motion.div
-              id={detailsId}
-              initial={false}
-              animate={{
-                height: detailsOpen ? "auto" : 0,
-                opacity: detailsOpen ? 1 : 0,
-              }}
-              transition={accordionTransition}
-              aria-hidden={!detailsOpen}
-              className="overflow-hidden"
-            >
-              <div className="pt-1 pb-3">
-                {project.highlights?.length > 0 && (
-                  <div>
-                    <span className="block mb-3 eyebrow">Highlights</span>
-                    <ul className="space-y-2.5">
-                      {project.highlights.map((point) => (
-                        <li
-                          key={point}
-                          className="flex gap-2.5 text-sm leading-6 text-ink/80 dark:text-ink-dark/80"
-                        >
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-muted dark:bg-muted-dark" />
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {project.stack?.length > 0 && (
-                  <div className="pt-4 mt-5 border-t border-line dark:border-line-dark">
-                    <span className="block mb-3 eyebrow">Tech stack</span>
-                    <div className="flex flex-wrap gap-2">
-                      {project.stack.map((tech) => (
-                        <Badge key={tech}>{tech}</Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </div>
-
-      {/* Desktop: two-column layout where the right column fills the available height */}
-      <div className="hidden grid-cols-1 items-stretch gap-6 md:grid md:grid-cols-[1.1fr_auto_1fr] md:gap-10">
-        {/* Left column: project details */}
-        <div className="flex flex-col justify-between min-w-0">
-          <div>
-            <div className="flex flex-wrap items-center mb-4 gap-x-3 gap-y-2 md:flex-nowrap">
-              <span className="font-mono text-xs font-light shrink-0 text-muted/60 dark:text-muted-dark/60">
-                {formattedIndex}
-              </span>
-
-              <span className="shrink-0 text-line dark:text-line-dark">—</span>
-
-              <span className="flex-1 min-w-0 eyebrow md:flex-initial">
-                {project.category}
-              </span>
-
-              {project.featured && (
-                <span className="flex basis-full items-center justify-end gap-1.5 text-[11px] font-medium text-signal dark:text-accent-dark md:ml-auto md:basis-auto">
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal animate-pulse-dot" />
-                  Featured
-                </span>
-              )}
-            </div>
-
-            <h3 className="mb-3 text-2xl font-medium tracking-tight md:text-3xl">
-              {project.name}
-            </h3>
-
-            <p className="mb-5 text-[15px] leading-7 text-muted dark:text-muted-dark sm:text-base md:mb-6">
-              {project.overview}
-            </p>
-
-            {project.highlights?.length > 0 && (
-              <ul className="mb-5 space-y-2.5 md:mb-6">
-                {project.highlights.map((point) => (
-                  <li
-                    key={point}
-                    className="group flex gap-2.5 text-sm leading-6 text-ink/80 dark:text-ink-dark/80"
-                  >
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-muted transition-transform duration-200 group-hover:scale-125 dark:bg-muted-dark" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between gap-3 pt-4 mt-auto border-t border-line dark:border-line-dark md:pt-5">
-            {project.links?.github ? (
-              <a
-                href={project.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-cursor="link"
-                className="inline-flex items-center gap-2 text-sm font-medium transition-colors text-muted hover:text-ink dark:text-muted-dark dark:hover:text-ink-dark"
-                onMouseEnter={() => githubRef.current?.startAnimation()}
-                onMouseLeave={() => githubRef.current?.stopAnimation()}
-              >
-                <GithubIcon ref={githubRef} size={17} />
-                GitHub
-              </a>
-            ) : (
-              <span aria-hidden="true" />
-            )}
-
+          <div className="flex items-center gap-1.5 shrink-0">
             {project.links?.demo && (
-              <a
-                href={project.links.demo}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-cursor="link"
-                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium text-signal transition-colors hover:bg-signal/10 dark:text-accent-dark dark:hover:bg-accent-dark/10 sm:px-3.5"
-                onMouseEnter={() => demoRef.current?.startAnimation()}
-                onMouseLeave={() => demoRef.current?.stopAnimation()}
+              <div
+                className="relative"
+                onMouseEnter={() => setActiveTooltip("demo")}
+                onMouseLeave={() => setActiveTooltip(null)}
               >
-                <LinkIcon ref={demoRef} size={15} />
-                Live demo
-              </a>
+                <a
+                  href={project.links.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cursor="link"
+                  aria-label={`${project.name} live demo`}
+                  className={iconButton}
+                  onMouseEnter={() => demoRef.current?.startAnimation()}
+                  onMouseLeave={() => demoRef.current?.stopAnimation()}
+                >
+                  <LinkIcon ref={demoRef} size={18} />
+                </a>
+
+                {activeTooltip === "demo" && (
+                  <div className="absolute bottom-full right-0 mb-2 px-2.5 py-1 text-[11px] font-medium whitespace-nowrap rounded-md border border-line bg-canvas text-ink shadow-lg pointer-events-none z-20 dark:border-line-dark dark:bg-canvas-dark dark:text-ink-dark">
+                    Live Demo
+                  </div>
+                )}
+              </div>
+            )}
+
+            {project.links?.github && (
+              <div
+                className="relative"
+                onMouseEnter={() => setActiveTooltip("github")}
+                onMouseLeave={() => setActiveTooltip(null)}
+              >
+                <a
+                  href={project.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cursor="link"
+                  aria-label={`${project.name} on GitHub`}
+                  className={iconButton}
+                  onMouseEnter={() => githubRef.current?.startAnimation()}
+                  onMouseLeave={() => githubRef.current?.stopAnimation()}
+                >
+                  <GithubIcon ref={githubRef} size={18} />
+                </a>
+
+                {activeTooltip === "github" && (
+                  <div className="absolute bottom-full right-0 mb-2 px-2.5 py-1 text-[11px] font-medium whitespace-nowrap rounded-md border border-line bg-canvas text-ink shadow-lg pointer-events-none z-20 dark:border-line-dark dark:bg-canvas-dark dark:text-ink-dark">
+                    GitHub
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
-
-        {/* Desktop divider */}
-        <div className="hidden w-px my-1 bg-line dark:bg-line-dark md:block" />
-
-        {/* Preview and tech stack - image wrapper uses flex-1 to fill the vertical space */}
-        <div className="flex flex-col justify-between h-full min-w-0 gap-4 md:gap-5">
-          <div className="relative flex-1 group">
-            <div className="relative w-full h-full overflow-hidden border rounded-xl border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark min-h-[200px]">
-              {project.image ? (
-                <img
-                  src={project.image}
-                  alt={`${project.name} preview`}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.015]"
-                />
-              ) : (
-                <div className="flex flex-col items-center justify-center w-full h-full min-h-0 gap-2 px-4 bg-line/40 dark:bg-line-dark/40">
-                  <span className="eyebrow text-muted dark:text-muted-dark">
-                    {project.name}
-                  </span>
-                  <span className="text-center text-[11px] text-muted/70 dark:text-muted-dark/70">
-                    Preview coming soon
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {project.stack?.length > 0 && (
-            <div className="pt-1">
-              <span className="eyebrow mb-2.5 block">Tech stack</span>
-              <div className="flex flex-wrap gap-2">
-                {project.stack.map((tech) => (
-                  <Badge key={tech}>{tech}</Badge>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
       </div>
-    </motion.article>
+    </article>
   );
 }
-
-// import { useRef } from "react";
-// import Badge from "./ui/Badge.jsx";
-// import { GithubIcon, LinkIcon } from "./ui/AnimatedIcons.jsx";
-
-// const MAX_STACK = 4;
-
-// const iconButton =
-//   "inline-flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-line/50 hover:text-ink dark:text-muted-dark dark:hover:bg-line-dark/60 dark:hover:text-ink-dark";
-
-// export default function ProjectCard({ project }) {
-//   const githubRef = useRef(null);
-//   const demoRef = useRef(null);
-
-//   const stack = project.stack ?? [];
-//   const visibleStack = stack.slice(0, MAX_STACK);
-//   const hiddenCount = stack.length - visibleStack.length;
-//   const isLive = Boolean(project.links?.demo);
-
-//   return (
-//     <article className="flex h-full flex-col border border-dashed border-line bg-canvas p-3.5 dark:border-line-dark dark:bg-canvas-dark sm:p-4">
-//       {/* Screenshot */}
-//       <div className="overflow-hidden border rounded-lg border-line bg-line/40 dark:border-line-dark dark:bg-line-dark/40">
-//         <div className="w-full aspect-video">
-//           {project.image ? (
-//             <img
-//               src={project.image}
-//               alt={`${project.name} preview`}
-//               loading="lazy"
-//               decoding="async"
-//               className="object-cover object-center w-full h-full"
-//             />
-//           ) : (
-//             <div className="flex items-center justify-center w-full h-full text-sm text-muted dark:text-muted-dark">
-//               Preview coming soon
-//             </div>
-//           )}
-//         </div>
-//       </div>
-
-//       {/* Title + status */}
-//       <div className="flex items-start justify-between gap-4 mt-4">
-//         <div className="min-w-0">
-//           <h3 className="text-xl font-medium tracking-tight">{project.name}</h3>
-//           {project.category && (
-//             <p className="mt-0.5 text-sm text-muted dark:text-muted-dark">
-//               {project.category}
-//             </p>
-//           )}
-//         </div>
-
-//         {isLive && (
-//           <span className="inline-flex items-center gap-2 mt-1 text-sm shrink-0 text-muted dark:text-muted-dark">
-//             <span className="w-2 h-2 rounded-full bg-signal dark:bg-accent-dark" />
-//             Live
-//           </span>
-//         )}
-//       </div>
-
-//       {/* Description */}
-//       <p className="mt-4 text-sm leading-6 text-muted dark:text-muted-dark">
-//         {project.overview}
-//       </p>
-
-//       {/* Footer: stack on the left, links on the right */}
-//       <div className="flex items-center justify-between gap-4 pt-5 mt-auto">
-//         {stack.length > 0 ? (
-//           <ul className="flex flex-wrap gap-2" aria-label="Tech stack">
-//             {visibleStack.map((tech) => (
-//               <li key={tech}>
-//                 <Badge>{tech}</Badge>
-//               </li>
-//             ))}
-//             {hiddenCount > 0 && (
-//               <li>
-//                 <Badge>+{hiddenCount}</Badge>
-//               </li>
-//             )}
-//           </ul>
-//         ) : (
-//           <span aria-hidden="true" />
-//         )}
-
-//         <div className="flex items-center gap-1 shrink-0">
-//           {project.links?.demo && (
-//             <a
-//               href={project.links.demo}
-//               target="_blank"
-//               rel="noopener noreferrer"
-//               data-cursor="link"
-//               aria-label={`${project.name} live demo`}
-//               className={iconButton}
-//               onMouseEnter={() => demoRef.current?.startAnimation()}
-//               onMouseLeave={() => demoRef.current?.stopAnimation()}
-//             >
-//               <LinkIcon ref={demoRef} size={18} />
-//             </a>
-//           )}
-
-//           {project.links?.github && (
-//             <a
-//               href={project.links.github}
-//               target="_blank"
-//               rel="noopener noreferrer"
-//               data-cursor="link"
-//               aria-label={`${project.name} on GitHub`}
-//               className={iconButton}
-//               onMouseEnter={() => githubRef.current?.startAnimation()}
-//               onMouseLeave={() => githubRef.current?.stopAnimation()}
-//             >
-//               <GithubIcon ref={githubRef} size={18} />
-//             </a>
-//           )}
-//         </div>
-//       </div>
-//     </article>
-//   );
-// }

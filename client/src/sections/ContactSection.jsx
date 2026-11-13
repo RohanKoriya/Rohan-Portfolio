@@ -5,32 +5,40 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="pt-12 pb-20 border-t border-dashed border-line dark:border-line-dark sm:pt-14 md:pt-16 md:pb-24"
+      className="py-20 border-t border-dashed border-line dark:border-line-dark sm:py-24 md:py-28"
     >
       <div className="container-content">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+        <div className="grid grid-cols-1 items-start gap-12 md:gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24">
+          {/* Left: Contact introduction */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="lg:pt-2"
           >
-            <span className="eyebrow">Contact</span>
-            <h2 className="max-w-sm mt-4 text-3xl font-medium tracking-tight md:text-4xl">
-              Let's talk about your team.
+            <h2 className="max-w-md mt-5 text-4xl font-medium tracking-tight sm:text-5xl">
+              Say hello.
             </h2>
-            <p className="max-w-sm mt-6 text-base leading-relaxed text-muted dark:text-muted-dark">
-              Available for full-time software engineering roles. Whether you
-              have a position open or just want to discuss full-stack projects,
-              my inbox is open.
+
+            <p className="max-w-md mt-6 text-base leading-7 text-muted dark:text-muted-dark">
+              I'm currently looking for a full-time software engineering role.
+              Have an opportunity on your team, or just want to talk about what
+              you're building? I'd love to hear from you.
             </p>
           </motion.div>
 
+          {/* Right: Contact form */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: 0.08 }}
+            transition={{
+              duration: 0.5,
+              delay: 0.1,
+              ease: "easeOut",
+            }}
+            className="w-full min-w-0 lg:ml-auto lg:max-w-xl"
           >
             <ContactForm />
           </motion.div>

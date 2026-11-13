@@ -2,12 +2,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { CheckCircle2, Loader2 } from "lucide-react";
-import { useRef } from "react";
+import { Check, CheckCircle2, Copy, Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { SendIcon } from "./ui/AnimatedIcons.jsx";
 import { submitContactForm } from "../utils/api.js";
 
 const MESSAGE_MAX = 600;
+const EMAIL = "koriyarohan123@gmail.com";
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Enter your full name"),
@@ -29,6 +31,10 @@ function fieldClasses(hasError) {
 
 export default function ContactForm() {
   const sendRef = useRef(null);
+  const [emailCopied, setEmailCopied] = useState(false);
+  const [emailHovered, setEmailHovered] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -44,6 +50,23 @@ export default function ContactForm() {
   const messageLength = watch("message")?.length ?? 0;
   const nameValid = touchedFields.name && !errors.name;
   const emailValid = touchedFields.email && !errors.email;
+
+  /* Reset the copy icon after a moment */
+  useEffect(() => {
+    if (!emailCopied) return;
+
+    const id = setTimeout(() => setEmailCopied(false), 2000);
+    return () => clearTimeout(id);
+  }, [emailCopied]);
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setEmailCopied(true);
+    } catch {
+      toast.error("Couldn't copy the email. It's " + EMAIL);
+    }
+  };
 
   const onSubmit = async ({ company, ...values }) => {
     // If honeypot is filled, silently ignore without showing error to bot
@@ -200,25 +223,75 @@ export default function ContactForm() {
         )}
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        onMouseEnter={() => sendRef.current?.startAnimation()}
-        onMouseLeave={() => sendRef.current?.stopAnimation()}
-        className="inline-flex items-center self-start justify-center gap-2 px-6 py-3 mt-1 text-sm font-medium transition-opacity rounded-xl bg-ink dark:bg-ink-dark text-canvas dark:text-canvas-dark hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {isSubmitting ? (
-          <>
-            <Loader2 size={16} className="animate-spin" />
-            Sending…
-          </>
-        ) : (
-          <>
-            <SendIcon ref={sendRef} size={16} />
-            Send message
-          </>
-        )}
-      </button>
+      {/* Send button, with a one-click copyable email beside it */}
+      <div className="flex flex-wrap items-center mt-1 gap-x-6 gap-y-3">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          onMouseEnter={() => sendRef.current?.startAnimation()}
+          onMouseLeave={() => sendRef.current?.stopAnimation()}
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium transition-opacity rounded-xl bg-ink dark:bg-ink-dark text-canvas dark:text-canvas-dark hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              Sending…
+            </>
+          ) : (
+            <>
+              <SendIcon ref={sendRef} size={16} />
+              Send message
+            </>
+          )}
+        </button>
+
+        <div className="relative">
+          <button
+            type="button"
+            onClick={handleCopyEmail}
+            aria-label="Copy email address"
+            onMouseEnter={() => setEmailHovered(true)}
+            onMouseLeave={() => setEmailHovered(false)}
+            onFocus={(event) =>
+              setEmailFocused(event.currentTarget.matches(":focus-visible"))
+            }
+            onBlur={() => setEmailFocused(false)}
+            className="inline-flex items-center gap-2 py-1 text-sm transition-colors rounded-md cursor-pointer text-muted hover:text-ink dark:text-muted-dark dark:hover:text-ink-dark"
+          >
+            <span>{EMAIL}</span>
+            {emailCopied ? (
+              <Check
+                size={15}
+                strokeWidth={2}
+                aria-hidden="true"
+                className="text-signal"
+              />
+            ) : (
+              <Copy size={15} strokeWidth={1.7} aria-hidden="true" />
+            )}
+          </button>
+
+          <AnimatePresence>
+            {(emailHovered || emailFocused || emailCopied) && (
+              <motion.span
+                aria-hidden="true"
+                style={{ x: "-50%" }}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 4 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1 font-mono text-[11px] font-medium text-canvas shadow-sm dark:bg-ink-dark dark:text-canvas-dark"
+              >
+                {emailCopied ? "✓ Copied" : "Copy email"}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <span role="status" className="sr-only">
+          {emailCopied ? "Email address copied to clipboard" : ""}
+        </span>
+      </div>
     </form>
   );
 }

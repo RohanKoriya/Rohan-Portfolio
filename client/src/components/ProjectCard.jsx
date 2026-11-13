@@ -93,8 +93,6 @@ export default function ProjectCard({ project, featured = false }) {
           {project.overview}
         </p>
 
-        
-
         {/* Footer: stack on the left, links on the right */}
         <div className="flex items-center justify-between gap-4 pt-5 mt-auto">
           {stack.length > 0 ? (

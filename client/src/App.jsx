@@ -17,10 +17,9 @@ import ContactSection from "./sections/ContactSection.jsx";
 import ProgressiveBlur from "./components/ui/ProgressiveBlur.jsx";
 
 const STATUS_MESSAGES = [
-  "Initializing system",
-  "MERN stack architecture",
-  "Indexing featured work",
-  "Rohan Koriya — Portfolio 2026",
+  "Setting things in motion",
+  "Crafting the details",
+  "Almost ready",
 ];
 
 const INTRO_DURATION = 1600;
@@ -100,7 +99,6 @@ export default function App() {
           >
             <div className="flex items-center justify-between font-mono text-xs tracking-widest uppercase text-muted dark:text-muted-dark">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-signal animate-pulse-dot" />
                 <span>Rohan Koriya</span>
               </div>
               <span>Mumbai, IN</span>
@@ -133,7 +131,7 @@ export default function App() {
             <div className="flex flex-col gap-3">
               <div className="flex items-end justify-between font-mono text-sm">
                 <span className="text-xs tracking-wider uppercase text-muted dark:text-muted-dark">
-                  Loading experience
+                  Loading---
                 </span>
                 <span className="text-4xl font-light tracking-tighter text-ink dark:text-ink-dark sm:text-5xl">
                   {String(progress).padStart(3, "0")}

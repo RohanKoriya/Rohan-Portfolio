@@ -76,7 +76,7 @@ export default function ProjectCard({ project, featured = false }) {
 
           {isLive && (
             <span className="inline-flex items-center gap-2 mt-1 text-sm shrink-0 text-muted dark:text-muted-dark">
-              <span className="w-2 h-2 rounded-full bg-signal dark:bg-accent-dark" />
+              <span className="w-1.5 h-1.5 rounded-full bg-signal dark:bg-accent-dark" />
               Live
             </span>
           )}

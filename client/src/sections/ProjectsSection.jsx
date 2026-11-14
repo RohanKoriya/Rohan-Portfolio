@@ -15,8 +15,9 @@ export default function ProjectsSection() {
           transition={{ duration: 0.5 }}
           className="max-w-md mb-14"
         >
-          <h2 className="mt-4 text-3xl font-medium tracking-tight md:text-4xl">
-            Projects I've built, end to end.
+          <motion.span className="eyebrow">Projects</motion.span>
+          <h2 className="mt-4 text-3xl font-medium tracking-tight md:text-3xl">
+            A few things I've enjoyed building
           </h2>
         </motion.div>
       </div>

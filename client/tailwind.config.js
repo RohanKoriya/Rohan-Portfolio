@@ -39,7 +39,7 @@ export default {
         mono: ["IBM Plex Mono", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       maxWidth: {
-        content: "1100px",
+        content: "1070px",
       },
       keyframes: {
         pulseDot: {

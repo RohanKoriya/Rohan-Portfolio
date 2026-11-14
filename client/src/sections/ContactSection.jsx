@@ -17,7 +17,7 @@ export default function ContactSection() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="lg:pt-2"
           >
-            <h2 className="max-w-md mt-5 text-4xl font-medium tracking-tight sm:text-5xl">
+            <h2 className="max-w-md mt-5 text-4xl font-medium tracking-tight sm:text-4xl">
               Say hello.
             </h2>
 

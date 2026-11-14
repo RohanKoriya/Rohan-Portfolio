@@ -99,7 +99,7 @@ export default function SkillsSection() {
           className="flex flex-col gap-6 mb-12 md:flex-row md:items-end md:justify-between"
         >
           <div className="max-w-md">
-            <h2 className="mt-4 text-3xl font-medium tracking-tight md:text-4xl">
+            <h2 className="mt-4 text-3xl font-medium tracking-tight md:text-3xl">
               The tools I use to build.
             </h2>
           </div>

@@ -158,7 +158,7 @@ export default function Navbar() {
             aria-haspopup="menu"
             aria-controls="mobile-navigation"
             aria-expanded={open}
-            className="inline-flex items-center justify-center transition-colors border rounded-lg h-9 w-9 border-line text-ink hover:bg-surface dark:border-line-dark dark:text-ink-dark dark:hover:bg-surface-dark"
+            className="inline-flex items-center justify-center transition-colors h-9 w-9 text-ink hover:bg-surface dark:text-ink-dark dark:hover:bg-surface-dark"
           >
             <AnimatePresence mode="wait" initial={false}>
               {open ? (
@@ -170,7 +170,7 @@ export default function Navbar() {
                   transition={{ duration: 0.15 }}
                   className="grid place-items-center"
                 >
-                  <X size={18} strokeWidth={1.75} />
+                  <X size={19} strokeWidth={1.75} />
                 </motion.span>
               ) : (
                 <motion.span
@@ -181,7 +181,7 @@ export default function Navbar() {
                   transition={{ duration: 0.15 }}
                   className="grid place-items-center"
                 >
-                  <Menu size={18} strokeWidth={1.75} />
+                  <Menu size={19} strokeWidth={1.75} />
                 </motion.span>
               )}
             </AnimatePresence>

@@ -64,12 +64,20 @@ export default function ThemeToggle() {
       onClick={handleToggle}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={isDark}
-      className="inline-flex items-center justify-center transition-colors border rounded-full h-9 w-9 border-line dark:border-line-dark text-ink dark:text-ink-dark hover:bg-surface dark:hover:bg-surface-dark"
+      className="inline-flex items-center justify-center transition-colors duration-200 group w-9 h-9 text-ink dark:text-ink-dark"
     >
       {isDark ? (
-        <Sun size={16} strokeWidth={1.75} />
+        <Sun
+          size={18}
+          strokeWidth={1.75}
+          className="transition-all duration-200 group-hover:rotate-45 group-hover:scale-110 group-hover:fill-current"
+        />
       ) : (
-        <Moon size={16} strokeWidth={1.75} />
+        <Moon
+          size={18}
+          strokeWidth={1.75}
+          className="transition-all duration-200 group-hover:-rotate-12 group-hover:scale-110 group-hover:fill-current"
+        />
       )}
     </button>
   );

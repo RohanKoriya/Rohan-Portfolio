@@ -292,3 +292,69 @@ textarea:focus-visible,
     transition: none;
   }
 }
+
+@media (min-width: 1440px) {
+  :root {
+    --content-w: 1070px; /* same value as max-w-content in Tailwind */
+    --dots-gap: 24px; /* clear space between the column and the dots */
+    --dots-fade: 72px; /* how far the fade stretches outward */
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+
+    --clear: calc(var(--content-w) / 2 + var(--dots-gap));
+    --full: calc(var(--clear) + var(--dots-fade));
+
+    /* Softer opacity for light mode (0.18 -> 0.08) */
+    background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+
+    -webkit-mask-image:
+      linear-gradient(
+        to right,
+        #000 0%,
+        #000 calc(50% - var(--full)),
+        rgba(0, 0, 0, 0.3) calc(50% - (var(--full) + var(--clear)) / 2),
+        transparent calc(50% - var(--clear)),
+        transparent calc(50% + var(--clear)),
+        rgba(0, 0, 0, 0.3) calc(50% + (var(--full) + var(--clear)) / 2),
+        #000 calc(50% + var(--full)),
+        #000 100%
+      ),
+      linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-composite: source-in;
+
+    mask-image:
+      linear-gradient(
+        to right,
+        #000 0%,
+        #000 calc(50% - var(--full)),
+        rgba(0, 0, 0, 0.3) calc(50% - (var(--full) + var(--clear)) / 2),
+        transparent calc(50% - var(--clear)),
+        transparent calc(50% + var(--clear)),
+        rgba(0, 0, 0, 0.3) calc(50% + (var(--full) + var(--clear)) / 2),
+        #000 calc(50% + var(--full)),
+        #000 100%
+      ),
+      linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+    mask-composite: intersect;
+  }
+
+  .dark body::before {
+    /* Softer opacity for dark mode (0.14 -> 0.07) */
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.09) 1px,
+      transparent 1px
+    );
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+  }
+}

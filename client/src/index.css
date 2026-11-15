@@ -295,7 +295,7 @@ textarea:focus-visible,
 
 @media (min-width: 1440px) {
   :root {
-    --content-w: 1070px; /* same value as max-w-content in Tailwind */
+    --content-w: 1050px; /* same value as max-w-content in Tailwind */
     --dots-gap: 24px; /* clear space between the column and the dots */
     --dots-fade: 72px; /* how far the fade stretches outward */
   }

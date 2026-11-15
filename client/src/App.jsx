@@ -15,6 +15,7 @@ import SkillsSection from "./sections/SkillsSection.jsx";
 import ProjectsSection from "./sections/ProjectsSection.jsx";
 import ContactSection from "./sections/ContactSection.jsx";
 import ProgressiveBlur from "./components/ui/ProgressiveBlur.jsx";
+import DotsBackground from "./components/DotsBackground.jsx";
 
 const STATUS_MESSAGES = [
   "Setting things in motion",
@@ -79,6 +80,7 @@ export default function App() {
     <ThemeProvider>
       <CustomCursor />
       <ScrollProgress />
+      <DotsBackground />
       <AnimatePresence>
         {!introFinished && (
           <motion.div

@@ -300,61 +300,185 @@ textarea:focus-visible,
     --dots-fade: 72px; /* how far the fade stretches outward */
   }
 
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-
-    --clear: calc(var(--content-w) / 2 + var(--dots-gap));
-    --full: calc(var(--clear) + var(--dots-fade));
-
-    /* Softer opacity for light mode (0.18 -> 0.08) */
-    background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-
-    -webkit-mask-image:
-      linear-gradient(
-        to right,
-        #000 0%,
-        #000 calc(50% - var(--full)),
-        rgba(0, 0, 0, 0.3) calc(50% - (var(--full) + var(--clear)) / 2),
-        transparent calc(50% - var(--clear)),
-        transparent calc(50% + var(--clear)),
-        rgba(0, 0, 0, 0.3) calc(50% + (var(--full) + var(--clear)) / 2),
-        #000 calc(50% + var(--full)),
-        #000 100%
-      ),
-      linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
-    -webkit-mask-composite: source-in;
-
-    mask-image:
-      linear-gradient(
-        to right,
-        #000 0%,
-        #000 calc(50% - var(--full)),
-        rgba(0, 0, 0, 0.3) calc(50% - (var(--full) + var(--clear)) / 2),
-        transparent calc(50% - var(--clear)),
-        transparent calc(50% + var(--clear)),
-        rgba(0, 0, 0, 0.3) calc(50% + (var(--full) + var(--clear)) / 2),
-        #000 calc(50% + var(--full)),
-        #000 100%
-      ),
-      linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
-    mask-composite: intersect;
-  }
-
-  .dark body::before {
-    /* Softer opacity for dark mode (0.14 -> 0.07) */
-    background-image: radial-gradient(
-      rgba(255, 255, 255, 0.09) 1px,
-      transparent 1px
-    );
-  }
-
   #root {
     position: relative;
     z-index: 1;
+  }
+}
+
+/*
+  Margin dots: invisible across the outer part of the margin, easing in toward
+  your content column and touching its dashed line. Hovering lights them up
+  gently.
+
+  Replace the old `body::before` / `.dark body::before` blocks with this file.
+*/
+
+@property --mx {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: -500px;
+}
+
+@property --my {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: -500px;
+}
+
+:root {
+  --content-w: 1050px; /* same value as max-w-content in Tailwind */
+  --dots-gap: 0px; /* space between the line and the dots (0 = touching) */
+  --dots-reach: 360px; /* longest fade; shorter margins fade over their full width */
+  --dots-pitch: 18px; /* spacing between dots */
+
+  --dot: rgba(0, 0, 0, 0.17);
+  --dot-strong: rgba(0, 0, 0, 0.34);
+}
+
+.dark {
+  --dot: rgba(255, 255, 255, 0.1);
+  --dot-strong: rgba(255, 255, 255, 0.22);
+}
+
+/* Only on wide screens, where the margins have room */
+.dots-bg {
+  display: none;
+}
+
+@media (min-width: 1440px) {
+  #root {
+    position: relative;
+    z-index: 1;
+  }
+
+  .dots-bg {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+
+    /* Each half spans exactly the margin between the screen edge and the line */
+    --margin: calc(50% - var(--content-w) / 2 - var(--dots-gap));
+    --span: min(100%, var(--dots-reach));
+
+    /*
+      Opacity ramps from 0 to 1 over the margin. The outer fifth stays fully
+      empty, and the curve is steep so only the dots near the line read clearly.
+    */
+    --stops-crisp:
+      transparent calc(100% - var(--span)),
+      transparent calc(100% - var(--span) * 0.8),
+      rgba(0, 0, 0, 0.03) calc(100% - var(--span) * 0.65),
+      rgba(0, 0, 0, 0.14) calc(100% - var(--span) * 0.45),
+      rgba(0, 0, 0, 0.4) calc(100% - var(--span) * 0.22),
+      rgba(0, 0, 0, 0.8) 100%;
+
+    /* Blurry dots: a faint haze mid-way, gone at both ends */
+    --stops-blur:
+      transparent calc(100% - var(--span)),
+      transparent calc(100% - var(--span) * 0.8),
+      rgba(0, 0, 0, 0.12) calc(100% - var(--span) * 0.6),
+      rgba(0, 0, 0, 0.2) calc(100% - var(--span) * 0.4),
+      rgba(0, 0, 0, 0.1) calc(100% - var(--span) * 0.2), transparent 100%;
+
+    /* Hover glow: steeper still, so it stays quiet far from the line */
+    --stops-hover:
+      transparent calc(100% - var(--span)),
+      transparent calc(100% - var(--span) * 0.7),
+      rgba(0, 0, 0, 0.06) calc(100% - var(--span) * 0.5),
+      rgba(0, 0, 0, 0.3) calc(100% - var(--span) * 0.25), #000 100%;
+
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+  }
+
+  .dots-layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .dots-half {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--margin);
+    background-size: var(--dots-pitch) var(--dots-pitch);
+  }
+
+  /* The grid is anchored to the line, so a column of dots sits right beside it */
+  .dots-half--left {
+    left: 0;
+    background-position: 100% 0;
+    --dir: to right;
+  }
+
+  .dots-half--right {
+    right: 0;
+    background-position: 0 0;
+    --dir: to left;
+  }
+
+  /* 1. Blurry dots toward the screen edge */
+  .dots-layer--blur {
+    filter: blur(1.1px);
+  }
+
+  .dots-layer--blur .dots-half {
+    background-image: radial-gradient(var(--dot) 1.4px, transparent 1.9px);
+    -webkit-mask-image: linear-gradient(var(--dir), var(--stops-blur));
+    mask-image: linear-gradient(var(--dir), var(--stops-blur));
+  }
+
+  /* 2. Sharp dots toward the line */
+  .dots-layer--crisp .dots-half {
+    background-image: radial-gradient(var(--dot) 0.85px, transparent 1.25px);
+    -webkit-mask-image: linear-gradient(var(--dir), var(--stops-crisp));
+    mask-image: linear-gradient(var(--dir), var(--stops-crisp));
+  }
+
+  /* 3. Brighter dots under the pointer */
+  .dots-layer--hover {
+    opacity: 0;
+    transition:
+      opacity 0.35s ease,
+      --mx 0.16s ease-out,
+      --my 0.16s ease-out;
+    -webkit-mask-image: radial-gradient(
+      circle 120px at var(--mx) var(--my),
+      #000 0%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      circle 120px at var(--mx) var(--my),
+      #000 0%,
+      transparent 100%
+    );
+  }
+
+  .dots-layer--hover .dots-half {
+    background-image: radial-gradient(
+      var(--dot-strong) 1.2px,
+      transparent 1.6px
+    );
+    -webkit-mask-image: linear-gradient(var(--dir), var(--stops-hover));
+    mask-image: linear-gradient(var(--dir), var(--stops-hover));
+  }
+
+  .dots-bg.is-active .dots-layer--hover {
+    opacity: 1;
   }
 }

@@ -172,7 +172,7 @@ export default function HeroSection({ ready = true }) {
       id="top"
       className="relative pt-32 pb-12 overflow-hidden sm:pb-14 sm:pt-32 md:pb-16 md:pt-36"
     >
-      <div className="container-content">
+      <div className="container-content max-[639px]:!px-3">
         <div className="flex flex-col items-center max-w-3xl mx-auto text-center">
           {/* Availability and local time */}
           <motion.div

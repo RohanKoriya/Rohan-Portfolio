@@ -3,9 +3,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { Menu, X } from "lucide-react";
 
 import ThemeToggle from "./ui/ThemeToggle.jsx";
-
-import { LetterRIcon } from "./ui/AnimatedIcons.jsx";
-
 import { useActiveSection } from "../hooks/useActiveSection.js";
 
 const NAV_LINKS = [
@@ -19,9 +16,7 @@ const SECTION_IDS = NAV_LINKS.map((link) => link.href.replace("#", ""));
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-
   const menuContainerRef = useRef(null);
-  const monogramRef = useRef(null);
 
   const activeSection = useActiveSection(SECTION_IDS);
 
@@ -75,21 +70,19 @@ export default function Navbar() {
           md:grid-cols-[1fr_auto_1fr]
         "
       >
-        {/* Logo */}
+        {/* Bold & Sightly Larger Typographic Monogram */}
         <a
           href="#top"
-          aria-label="Rohan Koriya, back to top"
+          aria-label="RK, back to top"
+          data-cursor="link"
           className="
-            flex items-center justify-self-start gap-2.5
-            text-sm font-semibold tracking-tight
-            text-ink transition-opacity hover:opacity-70
+            group inline-flex items-center justify-self-start
+            font-['Poppins',sans-serif] text-xl font-semibold tracking-[0.12em]
+            text-ink transition-opacity duration-200 hover:opacity-70
             dark:text-ink-dark
           "
-          onMouseEnter={() => monogramRef.current?.startAnimation()}
-          onMouseLeave={() => monogramRef.current?.stopAnimation()}
         >
-          <LetterRIcon ref={monogramRef} size={20} />
-          <span className="font-medium">Rohan Koriya</span>
+          <span>RK</span>
         </a>
 
         {/* Desktop navigation */}

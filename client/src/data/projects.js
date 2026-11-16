@@ -2,7 +2,7 @@ export const projects = [
   {
     id: "ranklytics",
     name: "Ranklytics",
-    image: "/images/SEO-img.png",
+    image: "/images/SEO-project.png",
     featured: true,
     category: "AI SEO Analytics Platform",
     stack: ["React", "Node.js", "Express", "MongoDB", "Gemini AI", "Browserbase"],
@@ -20,7 +20,7 @@ export const projects = [
   {
     id: "leadflow",
     name: "LeadFlow",
-    image: "/images/Leadflow-img.png",
+    image: "/images/LF-project.png",
     featured: false,
     category: "Smart Leads & CRM Workspace",
     stack: ["React", "JavaScript", "Node.js", "Express", "MongoDB", "Docker"],
@@ -40,7 +40,7 @@ export const projects = [
   {
     id: "chatsphere",
     name: "ChatSphere",
-    image: "/images/Chatsphere-img.png",
+    image: "/images/CS-project.png",
     featured: false,
     category: "Real-Time Messaging App",
     stack: ["React", "Node.js", "Socket.IO", "Express", "MongoDB", "Cloudinary"],

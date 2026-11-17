@@ -143,6 +143,10 @@ export default function Navbar() {
           className="relative flex items-center gap-2 justify-self-end md:hidden"
         >
           <ThemeToggle />
+          <span
+            aria-hidden="true"
+            className="w-px h-5 bg-line dark:bg-line-dark"
+          />
 
           <button
             type="button"

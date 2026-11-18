@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Toaster } from "sonner";
 
-import BlurText from "./components/ui/Blurtext.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import CustomCursor from "./components/Customcursor.jsx";
@@ -17,14 +16,12 @@ import ContactSection from "./sections/ContactSection.jsx";
 import ProgressiveBlur from "./components/ui/ProgressiveBlur.jsx";
 import DotsBackground from "./components/DotsBackground.jsx";
 
-const STATUS_MESSAGES = [
-  "Setting things in motion",
-  "Crafting the details",
-  "Almost ready",
-];
-
-const INTRO_DURATION = 1600;
+const INTRO_DURATION = 1500;
 const SESSION_KEY = "portfolio-intro-seen";
+
+// Smooth start and finish so the count feels natural, not mechanical
+const easeInOutCubic = (t) =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 export default function App() {
   const prefersReducedMotion = useReducedMotion();
@@ -37,19 +34,16 @@ export default function App() {
   const [progress, setProgress] = useState(0);
   const startRef = useRef(null);
 
-  const statusIndex =
-    progress > 75 ? 3 : progress > 50 ? 2 : progress > 25 ? 1 : 0;
-
   useEffect(() => {
     if (introFinished) return;
 
     let frame;
     const tick = (timestamp) => {
       if (!startRef.current) startRef.current = timestamp;
-      const elapsed = timestamp - startRef.current;
-      const next = Math.min(100, Math.round((elapsed / INTRO_DURATION) * 100));
+      const t = Math.min(1, (timestamp - startRef.current) / INTRO_DURATION);
+      const next = Math.round(easeInOutCubic(t) * 100);
       setProgress(next);
-      if (next < 100) frame = requestAnimationFrame(tick);
+      if (t < 1) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
@@ -60,7 +54,7 @@ export default function App() {
     const timeout = setTimeout(() => {
       window.sessionStorage.setItem(SESSION_KEY, "true");
       setIntroFinished(true);
-    }, 500);
+    }, 600);
     return () => clearTimeout(timeout);
   }, [progress, introFinished]);
 
@@ -75,6 +69,12 @@ export default function App() {
       document.body.style.overflow = "";
     };
   }, [introFinished]);
+
+  // Three digits so the width never shifts while counting
+  const padded = String(progress).padStart(3, "0");
+  // Soft-edged mask that rises from the bottom (edge runs from -14% to 100%)
+  const edge = progress * 1.14 - 14;
+  const fillMask = `linear-gradient(to top, #000 ${edge}%, transparent ${edge + 14}%)`;
 
   return (
     <ThemeProvider>
@@ -92,68 +92,61 @@ export default function App() {
             onKeyDown={(event) => {
               if (event.key === "Enter" || event.key === " ") skipIntro();
             }}
-            initial={{ opacity: 1, y: 0 }}
+            initial={{ y: 0 }}
             exit={{
               y: "-100%",
-              transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1] },
+              transition: { duration: 0.65, ease: [0.76, 0, 0.24, 1] },
             }}
-            className="fixed inset-0 z-[9999] flex cursor-pointer select-none flex-col justify-between overflow-hidden bg-canvas dark:bg-canvas-dark px-4 py-10 text-ink dark:text-ink-dark"
+            className="fixed inset-y-0 left-0 right-0 z-[9999] mx-auto flex w-full max-w-content cursor-pointer select-none items-center justify-center overflow-hidden border-x border-dashed border-line bg-canvas text-ink dark:border-line-dark/50 dark:bg-canvas-dark dark:text-ink-dark"
           >
-            <div className="flex items-center justify-between font-mono text-xs tracking-widest uppercase text-muted dark:text-muted-dark">
-              <div className="flex items-center gap-2">
-                <span>Rohan Koriya</span>
-              </div>
-              <span>Mumbai, IN</span>
-            </div>
-
-            <div className="flex flex-col items-center justify-center my-auto text-center">
-              <BlurText
-                text="Designing & Engineering Web Products"
-                delay={120}
-                animateBy="words"
-                direction="top"
-                stepDuration={0.45}
-                className="justify-center max-w-2xl text-3xl font-medium tracking-tight text-center text-ink dark:text-ink-dark sm:text-4xl md:text-5xl"
-              />
-
-              <div className="h-6 mt-6 overflow-hidden">
-                <motion.p
-                  key={statusIndex}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.25 }}
-                  className="font-mono text-xs tracking-widest uppercase text-muted dark:text-muted-dark"
+            {/* Centered counter: the number fills from the bottom up as it loads */}
+            <motion.div
+              initial={{ opacity: 0, y: 16, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{
+                opacity: 0,
+                y: -28,
+                filter: "blur(8px)",
+                transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] },
+              }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="relative flex items-baseline"
+              role="progressbar"
+              aria-label="Loading"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={progress}
+            >
+              <span className="relative font-light leading-none tracking-tighter tabular-nums text-7xl sm:text-8xl md:text-9xl">
+                {/* Dim base layer */}
+                <span className="opacity-[0.16]">{padded}</span>
+                {/* Bright layer revealed with a soft edge that rises with progress */}
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0"
+                  style={{
+                    WebkitMaskImage: fillMask,
+                    maskImage: fillMask,
+                  }}
                 >
-                  {STATUS_MESSAGES[statusIndex]}
-                </motion.p>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <div className="flex items-end justify-between font-mono text-sm">
-                <span className="text-xs tracking-wider uppercase text-muted dark:text-muted-dark">
-                  Loading---
+                  {padded}
                 </span>
-                <span className="text-4xl font-light tracking-tighter text-ink dark:text-ink-dark sm:text-5xl">
-                  {String(progress).padStart(3, "0")}
-                  <span className="ml-1 text-xs font-normal text-muted dark:text-muted-dark">
-                    %
-                  </span>
-                </span>
-              </div>
-
-              <div className="relative h-[2px] w-full overflow-hidden bg-line dark:bg-line-dark">
-                <div
-                  className="h-full bg-ink dark:bg-ink-dark"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-
-              <span className="text-center text-[11px] text-muted/70 dark:text-muted-dark/70">
-                Click anywhere to skip
               </span>
-            </div>
+              <span className="ml-1 text-xl font-light sm:text-2xl md:text-3xl text-muted dark:text-muted-dark">
+                %
+              </span>
+            </motion.div>
+
+            {/* Skip hint */}
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.2 } }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+              className="absolute left-0 right-0 text-xs tracking-wide text-center bottom-8 sm:bottom-10 text-muted dark:text-muted-dark"
+            >
+              Click or tap anywhere to skip
+            </motion.span>
           </motion.div>
         )}
       </AnimatePresence>

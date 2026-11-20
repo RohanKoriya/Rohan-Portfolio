@@ -5,13 +5,19 @@ import ScrollHighlightBlock from "../components/ui/ScrollHighlightText.jsx";
 const DETAILS = [
   {
     label: "Education",
-    value: "B.Sc. IT · Mumbai University, 2026",
+    value: "Bachelor of Science in Information Technology",
+    subtext: "University of Mumbai · 2026",
     Icon: GraduationCap,
+    wide: true,
   },
-  { label: "Based in", value: "Mumbai, India", Icon: MapPin },
+  {
+    label: "Based in",
+    value: "Mumbai, India",
+    Icon: MapPin,
+  },
   {
     label: "Status",
-    value: "Open to full-time opportunities",
+    value: "Open to full-time roles",
     Icon: Briefcase,
   },
 ];
@@ -34,14 +40,14 @@ export default function AboutSection() {
     },
   };
 
-  const containerVariants = {
+  const stagger = (gap) => ({
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: reduceMotion ? 0 : 0.08,
+        staggerChildren: reduceMotion ? 0 : gap,
       },
     },
-  };
+  });
 
   return (
     <section
@@ -53,7 +59,7 @@ export default function AboutSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
-          variants={containerVariants}
+          variants={stagger(0.08)}
         >
           <motion.span variants={reveal} className="block mb-6 eyebrow md:mb-8">
             A little about me
@@ -67,19 +73,25 @@ export default function AboutSection() {
             >
               <ScrollHighlightBlock
                 headline="I like building things and figuring out how they work."
-                body="I recently graduated with a B.Sc. in Information Technology from Mumbai University, and most of my learning has come from building projects. I enjoy taking an idea, working through the challenges, and turning it into something people can actually use. Projects like Ranklytics, LeadFlow, and ChatSphere have helped me learn a lot along the way."
+                body="I recently graduated with a B.Sc. in Information Technology from University of Mumbai, and most of my learning has come from building projects. I enjoy taking an idea, working through the challenges, and turning it into something people can actually use. Projects like Ranklytics, LeadFlow, and ChatSphere have helped me learn a lot along the way."
               />
             </motion.div>
 
-            {/* Right: key facts */}
+            {/* Right: key facts. Rows cascade in one by one. */}
             <motion.aside
-              variants={reveal}
+              variants={stagger(0.1)}
               className="min-w-0 lg:col-span-5 lg:pt-1"
             >
-              <dl className="flex flex-col gap-6">
-                {DETAILS.map(({ label, value, Icon }) => (
-                  <div key={label} className="flex items-center gap-4">
-                    <span className="grid w-10 h-10 border rounded-lg shrink-0 place-items-center border-line text-muted dark:border-line-dark dark:text-muted-dark">
+              <dl className="grid grid-cols-1 gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-1">
+                {DETAILS.map(({ label, value, subtext, Icon, wide }) => (
+                  <motion.div
+                    key={label}
+                    variants={reveal}
+                    className={`flex items-start gap-4 ${
+                      wide ? "sm:col-span-2 lg:col-span-1" : ""
+                    }`}
+                  >
+                    <span className="grid w-10 h-10 mt-0.5 border rounded-lg shrink-0 place-items-center border-line text-muted dark:border-line-dark dark:text-muted-dark">
                       <Icon size={17} strokeWidth={1.6} aria-hidden="true" />
                     </span>
 
@@ -87,11 +99,16 @@ export default function AboutSection() {
                       <dt className="text-xs text-muted dark:text-muted-dark">
                         {label}
                       </dt>
-                      <dd className="mt-0.5 text-[15px] font-medium leading-6 text-ink dark:text-ink-dark">
+                      <dd className="mt-0.5 text-[15px] font-medium leading-snug text-ink dark:text-ink-dark">
                         {value}
                       </dd>
+                      {subtext && (
+                        <dd className="mt-1 text-xs text-muted dark:text-muted-dark">
+                          {subtext}
+                        </dd>
+                      )}
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </dl>
             </motion.aside>

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Menu, X } from "lucide-react";
 
 import ThemeToggle from "./ui/ThemeToggle.jsx";
@@ -14,11 +14,68 @@ const NAV_LINKS = [
 
 const SECTION_IDS = NAV_LINKS.map((link) => link.href.replace("#", ""));
 
+// Horizontal padding of each desktop link (px-3 = 12px).
+// The underline is inset by this much so it sits under the text only.
+const LINK_PAD = 12;
+
+// Elastic "stretch" springs: the edge the line moves toward leads (fast),
+// the edge it leaves from trails (slow). The line stretches, then snaps shut.
+const SPRING_LEAD = { type: "spring", stiffness: 520, damping: 36 };
+const SPRING_TRAIL = { type: "spring", stiffness: 190, damping: 26 };
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const menuContainerRef = useRef(null);
+  const [indicator, setIndicator] = useState({
+    left: 0,
+    right: 0,
+    visible: false,
+    ready: false,
+  });
 
+  const menuContainerRef = useRef(null);
+  const navRef = useRef(null);
+  const linkRefs = useRef([]);
+  const prevIndexRef = useRef(-1);
+  const directionRef = useRef(1); // 1 = moving right, -1 = moving left
+
+  const prefersReducedMotion = useReducedMotion();
   const activeSection = useActiveSection(SECTION_IDS);
+  const activeIndex = SECTION_IDS.indexOf(activeSection);
+
+  // Measure the active link and position the sliding underline
+  useLayoutEffect(() => {
+    if (activeIndex !== prevIndexRef.current && activeIndex >= 0) {
+      if (prevIndexRef.current >= 0) {
+        directionRef.current = activeIndex > prevIndexRef.current ? 1 : -1;
+      }
+      prevIndexRef.current = activeIndex;
+    }
+
+    const measure = () => {
+      const nav = navRef.current;
+      const link = linkRefs.current[activeIndex];
+
+      if (activeIndex < 0 || !nav || !link) {
+        setIndicator((prev) => ({ ...prev, visible: false }));
+        return;
+      }
+
+      const navWidth = nav.offsetWidth;
+      if (navWidth === 0) return; // nav is hidden (mobile)
+
+      const left = link.offsetLeft + LINK_PAD;
+      const right = navWidth - (link.offsetLeft + link.offsetWidth - LINK_PAD);
+
+      setIndicator({ left, right, visible: true, ready: true });
+    };
+
+    measure();
+
+    if (!navRef.current) return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(navRef.current);
+    return () => observer.disconnect();
+  }, [activeIndex]);
 
   // Close menu if viewport resizes to desktop
   useEffect(() => {
@@ -60,6 +117,16 @@ export default function Navbar() {
     };
   }, [open]);
 
+  const movingRight = directionRef.current > 0;
+
+  const indicatorTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : {
+        left: movingRight ? SPRING_TRAIL : SPRING_LEAD,
+        right: movingRight ? SPRING_LEAD : SPRING_TRAIL,
+        opacity: { duration: 0.2 },
+      };
+
   return (
     <header className="sticky top-0 z-40 w-full transition-colors duration-200 border-b border-line bg-canvas dark:border-line-dark dark:bg-canvas-dark">
       <div
@@ -70,7 +137,7 @@ export default function Navbar() {
           md:grid-cols-[1fr_auto_1fr]
         "
       >
-        {/* Bold & Sightly Larger Typographic Monogram */}
+        {/* Bold & Slightly Larger Typographic Monogram */}
         <a
           href="#top"
           aria-label="RK, back to top"
@@ -87,22 +154,26 @@ export default function Navbar() {
 
         {/* Desktop navigation */}
         <nav
+          ref={navRef}
           aria-label="Primary navigation"
-          className="items-center hidden gap-1 justify-self-center md:flex"
+          className="relative items-center hidden gap-2 justify-self-center md:flex"
         >
-          {NAV_LINKS.map((link) => {
+          {NAV_LINKS.map((link, index) => {
             const sectionId = link.href.replace("#", "");
             const isActive = activeSection === sectionId;
 
             return (
               <a
                 key={link.href}
+                ref={(el) => {
+                  linkRefs.current[index] = el;
+                }}
                 href={link.href}
                 data-cursor="link"
                 aria-current={isActive ? "location" : undefined}
                 className={`
-                  relative rounded-full px-4 py-1.5
-                  text-sm font-medium transition-colors
+                  group relative px-3 py-2
+                  text-sm font-medium tracking-wide transition-colors duration-200
                   ${
                     isActive
                       ? "text-ink dark:text-ink-dark"
@@ -110,21 +181,39 @@ export default function Navbar() {
                   }
                 `}
               >
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-active-pill"
-                    className="absolute inset-0 border rounded-full border-line/60 bg-surface dark:border-line-dark/60 dark:bg-surface-dark"
-                    transition={{
-                      type: "spring",
-                      stiffness: 380,
-                      damping: 32,
-                    }}
+                <span className="relative z-10">{link.label}</span>
+
+                {/* Hover underline: draws in from the left on inactive links */}
+                {!isActive && (
+                  <span
+                    aria-hidden="true"
+                    className="
+                      absolute bottom-0.5 left-3 right-3 h-px origin-left scale-x-0
+                      bg-ink/40 transition-transform duration-300
+                      ease-[cubic-bezier(0.22,1,0.36,1)]
+                      group-hover:scale-x-100
+                      dark:bg-ink-dark/40
+                    "
                   />
                 )}
-                <span className="relative z-10">{link.label}</span>
               </a>
             );
           })}
+
+          {/* Active underline: stretches toward the next tab, then snaps shut */}
+          {indicator.ready && (
+            <motion.span
+              aria-hidden="true"
+              initial={false}
+              animate={{
+                left: indicator.left,
+                right: indicator.right,
+                opacity: indicator.visible ? 1 : 0,
+              }}
+              transition={indicatorTransition}
+              className="absolute bottom-0.5 h-[2px] rounded-full bg-ink pointer-events-none dark:bg-ink-dark"
+            />
+          )}
         </nav>
 
         {/* Desktop actions (Theme Toggle only) */}
@@ -220,15 +309,34 @@ export default function Navbar() {
                         aria-current={isActive ? "location" : undefined}
                         onClick={() => setOpen(false)}
                         className={`
-                          flex items-center rounded-xl px-3.5 py-2.5
+                          relative flex items-center rounded-xl py-2.5 pl-5 pr-3.5
                           text-sm font-medium transition-colors
                           ${
                             isActive
-                              ? "bg-surface text-ink font-semibold dark:bg-surface-dark dark:text-ink-dark"
-                              : "text-muted hover:bg-surface/60 hover:text-ink dark:text-muted-dark dark:hover:bg-surface-dark/60 dark:hover:text-ink-dark"
+                              ? "font-semibold text-ink dark:text-ink-dark"
+                              : "text-muted hover:text-ink dark:text-muted-dark dark:hover:text-ink-dark"
                           }
                         `}
                       >
+                        {/* Active marker: vertically centered bar, slides between items.
+                            inset-y-0 + my-auto centers it without a CSS transform,
+                            so it doesn't clash with motion's layout animation. */}
+                        {isActive && (
+                          <motion.span
+                            layoutId="nav-active-bar"
+                            aria-hidden="true"
+                            className="absolute inset-y-0 left-2 my-auto h-4 w-0.5 rounded-full bg-ink dark:bg-ink-dark"
+                            transition={
+                              prefersReducedMotion
+                                ? { duration: 0 }
+                                : {
+                                    type: "spring",
+                                    stiffness: 420,
+                                    damping: 32,
+                                  }
+                            }
+                          />
+                        )}
                         {link.label}
                       </a>
                     );

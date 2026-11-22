@@ -23,6 +23,124 @@ const LINK_PAD = 12;
 const SPRING_LEAD = { type: "spring", stiffness: 520, damping: 36 };
 const SPRING_TRAIL = { type: "spring", stiffness: 190, damping: 26 };
 
+/**
+ * Desktop theme toggle with a hover / keyboard-focus tooltip.
+ * - Shows "Toggle Mode  D" on hover or keyboard focus (never after a mouse click)
+ * - Pressing "D" anywhere (outside inputs) toggles the theme
+ * - Tooltip is anchored to the center of the button, with a caret pointing at it
+ */
+function ThemeToggleWithTooltip() {
+  const [visible, setVisible] = useState(false);
+  const wrapperRef = useRef(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  // "D" shortcut: clicks the ThemeToggle button
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key.toLowerCase() !== "d") return;
+      if (event.repeat || event.metaKey || event.ctrlKey || event.altKey) {
+        return;
+      }
+
+      const target = event.target;
+      const isTyping =
+        target instanceof HTMLElement &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable);
+
+      if (isTyping) return;
+
+      setVisible(false);
+      wrapperRef.current?.querySelector("button")?.click();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  return (
+    <div
+      ref={wrapperRef}
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+      onPointerDown={() => setVisible(false)}
+      onFocus={(event) => {
+        // :focus-visible is true for keyboard focus only, not mouse clicks
+        if (event.target.matches(":focus-visible")) setVisible(true);
+      }}
+      onBlur={() => setVisible(false)}
+      className="relative inline-flex items-center"
+    >
+      <ThemeToggle />
+
+      <AnimatePresence>
+        {visible && (
+          // Zero-width anchor at the toggle's horizontal center
+          <span className="absolute z-50 pointer-events-none left-1/2 top-full mt-2.5">
+            <motion.span
+              role="tooltip"
+              initial={
+                prefersReducedMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, y: -4, scale: 0.96 }
+              }
+              animate={
+                prefersReducedMotion
+                  ? { opacity: 1 }
+                  : { opacity: 1, y: 0, scale: 1 }
+              }
+              exit={
+                prefersReducedMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, y: -3, scale: 0.97 }
+              }
+              transition={{ duration: 0.14, ease: [0.22, 1, 0.36, 1] }}
+              style={{ transformOrigin: "calc(100% - 16px) 0" }}
+              className="
+                absolute top-0 -right-4
+                flex items-center gap-2 whitespace-nowrap
+                rounded-xl bg-ink px-3 py-1.5
+                text-[13px] font-medium text-canvas
+                shadow-[0_8px_20px_rgba(0,0,0,0.28)]
+                ring-1 ring-canvas/10
+                dark:bg-ink-dark dark:text-canvas-dark
+                dark:shadow-[0_8px_20px_rgba(0,0,0,0.45)]
+                dark:ring-canvas-dark/10
+              "
+            >
+              {/* Caret: 16px from the right edge, over the toggle's center */}
+              <span
+                aria-hidden="true"
+                className="
+                  absolute -top-1 right-[11px] h-2.5 w-2.5 rotate-45 rounded-[2px]
+                  bg-ink dark:bg-ink-dark
+                "
+              />
+              <span className="relative z-10 tracking-[-0.01em]">
+                Toggle Mode
+              </span>
+              <kbd
+                className="
+                  relative z-10 inline-flex h-[22px] min-w-[22px] items-center justify-center
+                  rounded-[6px] bg-canvas/15 px-1.5
+                  font-sans text-[12px] font-medium leading-none text-canvas
+                  shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]
+                  dark:bg-canvas-dark/15 dark:text-canvas-dark
+                  dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]
+                "
+              >
+                D
+              </kbd>
+            </motion.span>
+          </span>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [indicator, setIndicator] = useState({
@@ -137,7 +255,6 @@ export default function Navbar() {
           md:grid-cols-[1fr_auto_1fr]
         "
       >
-        {/* Bold & Slightly Larger Typographic Monogram */}
         <a
           href="#top"
           aria-label="RK, back to top"
@@ -216,14 +333,9 @@ export default function Navbar() {
           )}
         </nav>
 
-        {/* Desktop actions (Theme Toggle only) */}
-        <div
-          className="
-            hidden items-center justify-self-end
-            gap-2.5 md:flex
-          "
-        >
-          <ThemeToggle />
+        {/* Desktop actions (Theme Toggle + Tooltip) */}
+        <div className="hidden items-center justify-self-end gap-2.5 md:flex">
+          <ThemeToggleWithTooltip />
         </div>
 
         {/* Mobile controls + Floating Popover Menu */}
@@ -273,7 +385,6 @@ export default function Navbar() {
             </AnimatePresence>
           </button>
 
-          {/* Compact Popover Dropdown */}
           <AnimatePresence>
             {open && (
               <motion.div
@@ -318,9 +429,8 @@ export default function Navbar() {
                           }
                         `}
                       >
-                        {/* Active marker: vertically centered bar, slides between items.
-                            inset-y-0 + my-auto centers it without a CSS transform,
-                            so it doesn't clash with motion's layout animation. */}
+                        {/* inset-y-0 + my-auto centers the bar without a CSS transform,
+                            which would clash with motion's layout animation */}
                         {isActive && (
                           <motion.span
                             layoutId="nav-active-bar"

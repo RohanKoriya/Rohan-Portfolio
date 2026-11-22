@@ -49,23 +49,14 @@ textarea:focus,
   outline: none;
 }
 
-/* Visible keyboard focus everywhere */
+/* Visible keyboard focus everywhere: thin light-gray outline */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid theme("colors.accent.DEFAULT");
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
-.dark a:focus-visible,
-.dark button:focus-visible,
-.dark input:focus-visible,
-.dark textarea:focus-visible,
-.dark [tabindex]:focus-visible {
-  outline-color: theme("colors.accent.dark");
+  outline: 1px solid #d4d4d8;
+  outline-offset: 2px;
 }
 
 .container-content {

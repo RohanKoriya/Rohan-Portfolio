@@ -64,7 +64,7 @@ export default function ThemeToggle() {
       onClick={handleToggle}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={isDark}
-      className="inline-flex items-center justify-center transition-colors duration-200 group w-9 h-9 text-ink dark:text-ink-dark"
+      className="inline-flex items-center justify-center w-8 h-8 transition-colors duration-200 rounded-lg group text-ink dark:text-ink-dark"
     >
       {isDark ? (
         <Sun

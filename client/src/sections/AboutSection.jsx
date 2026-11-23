@@ -6,7 +6,13 @@ const DETAILS = [
   {
     label: "Education",
     value: "Bachelor of Science in Information Technology",
-    subtext: "University of Mumbai · 2026",
+    subtext: (
+      <span className="inline-flex flex-wrap items-center gap-2">
+        <span>University of Mumbai</span>
+        <span>·</span>
+        <span>2023 - 2026</span>
+      </span>
+    ),
     Icon: GraduationCap,
     wide: true,
   },

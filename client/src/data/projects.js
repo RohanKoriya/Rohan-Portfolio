@@ -14,7 +14,7 @@ export const projects = [
     ],
     links: {
       github: "https://github.com/RohanKoriya/Ranklytics-AI-Powered-SEO-Analytics-Platform",
-      demo: "https://seo-rank-tracker-swart.vercel.app",
+      demo: "https://ranklytics-ai.vercel.app",
     },
   },
   {

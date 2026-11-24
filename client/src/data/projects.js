@@ -23,7 +23,7 @@ export const projects = [
     image: "/images/LF-project.png",
     featured: false,
     category: "Smart Leads & CRM Workspace",
-    stack: ["React", "JavaScript", "Node.js", "Express", "MongoDB", "Docker"],
+    stack: ["React", "TypeScript", "Node.js", "Express", "MongoDB", "Docker"],
     overview:
       "A CRM workspace for managing leads and sales pipelines, with role-based access control, analytics, and reporting.",
     highlights: [

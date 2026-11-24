@@ -5,6 +5,7 @@ export const skillGroups = [
     skills: [
       { name: "React.js", icon: "Component" },
       { name: "JavaScript (ES6+)", icon: "Braces" },
+      { name: "TypeScript", icon: "Braces" },
       { name: "HTML5 / CSS3", icon: "Code2" },
       { name: "Tailwind CSS", icon: "Wind" },
       { name: "Redux / Zustand", icon: "Boxes" },
